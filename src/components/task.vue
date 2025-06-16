@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="task-box">
       <h2 class="title">Add New Task!</h2>
-      <form @submit.prevent="saveForm" ref="formRef">
+      <v-form @submit.prevent="saveForm" ref="formRef">
         <div class="input-group">
           <label for="task">Task:</label>
           <input id="task" v-model="task" type="text" class="custom-input" required />
@@ -15,17 +15,17 @@
           <v-btn class="custom-btn cancel-btn" @click="cancelForm" type="button">Cancel</v-btn>
           <v-btn class="custom-btn save-btn" type="submit">Save</v-btn>
         </div>
-      </form>
+      </v-form>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 
-const task = ref("");
-const taskId = ref("");
-const formRef = ref(null);
+const task = ref<string>("");
+const taskId = ref<string>("");
+const formRef = ref<HTMLElement | null>(null);
 
 const cancelForm = () => {
   task.value = "";
@@ -37,6 +37,7 @@ const saveForm = () => {
   console.log("ID:", taskId.value);
 };
 </script>
+
 <style scoped>
 .app-container {
   background-color: #a259ff;
