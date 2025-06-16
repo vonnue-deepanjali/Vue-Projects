@@ -4,13 +4,13 @@
       <h2 class="title">Get Things Done!</h2>
 
       <div class="btn-wrapper">
-        <v-btn class="new-task-btn" to="/task"> + New Task </v-btn>
+        <v-btn class="new-task-btn" to="/task">+ New Task</v-btn>
       </div>
 
-      <div v-for="task in tasks" :key="task" class="task-item">
+      <div v-for="task in tasks" :key="task.id" class="task-item">
         <div class="task-content">
           <input type="checkbox" class="task-checkbox" />
-          <span>{{ task }}</span>
+          <span>{{ task.name }}</span>
         </div>
         <div class="task-actions">
           <svg
@@ -49,7 +49,11 @@
 </template>
 
 <script setup>
-const tasks = ["Go shopping", "Eat lunch", "Do laundry"];
+const tasks = [
+  { id: 1, name: "Go shopping" },
+  { id: 2, name: "Eat lunch" },
+  { id: 3, name: "Do laundry" },
+];
 </script>
 
 <style scoped>
