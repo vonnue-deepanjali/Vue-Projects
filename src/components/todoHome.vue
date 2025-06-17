@@ -1,9 +1,9 @@
 <template>
-  <div class="app-container">
+  <div class="task-container">
     <div class="task-box">
       <h2 class="title">Get Things Done!</h2>
       <div class="btn-wrapper">
-        <v-btn class="new-task-btn" to="/task">+ New Task</v-btn>
+        <v-btn class="task-btn" to="/task">+ New Task</v-btn>
       </div>
       <div v-for="task in tasks" :key="task.id" class="task-item">
         <div class="task-content">
@@ -44,10 +44,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 
-const tasks = ref([]);
+type Task = {
+  id: number;
+  title: string;
+};
+
+const tasks = ref<Task[]>([]);
 
 onMounted(async () => {
   const res = await fetch("http://localhost:3000/tasks");
@@ -56,7 +61,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.app-container {
+.task-container {
   background-color: #a259ff;
   min-height: 100vh;
   display: flex;
@@ -80,7 +85,7 @@ onMounted(async () => {
   justify-content: center;
   margin-bottom: 24px;
 }
-.new-task-btn {
+.task-btn {
   background-color: #a259ff;
   color: white;
   font-size: 16px;
