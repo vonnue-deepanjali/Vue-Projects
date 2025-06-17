@@ -20,26 +20,46 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
 
-const task = ref<string>("");
-const taskId = ref<string>("");
-const formRef = ref<HTMLElement | null>(null);
+const task = ref("");
+const taskId = ref("");
+const formRef = ref(null);
 
 const cancelForm = () => {
   task.value = "";
   taskId.value = "";
 };
 
-const saveForm = () => {
-  console.log("Task:", task.value);
-  console.log("ID:", taskId.value);
+const saveForm = async () => {
+  const taskData = {
+    id: taskId.value,
+    name: task.value,
+  };
+
+  try {
+    await fetch("http://localhost:3000/tasks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(taskData),
+    });
+
+    task.value = "";
+    taskId.value = "";
+
+    alert("Task saved!");
+  } catch (err) {
+    console.error("Error saving task:", err);
+    alert("Failed to save task");
+  }
 };
 </script>
 
 <style scoped>
-.app-container {
+.task-container {
   background-color: #a259ff;
   min-height: 100vh;
   display: flex;
