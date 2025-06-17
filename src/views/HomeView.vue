@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import todoHome from "../components/todoHome.vue";
+import todoHome from "@/components/todoHome.vue";
 </script>
