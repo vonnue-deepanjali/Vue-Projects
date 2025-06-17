@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="task-container">
     <div class="task-box">
       <h2 class="title">Add New Task!</h2>
       <v-form @submit.prevent="saveForm" ref="formRef">
