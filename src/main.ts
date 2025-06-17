@@ -1,5 +1,6 @@
 import './assets/global.css'
 import { createApp } from "vue";
+import { createPinia } from 'pinia';
 import router from './router'
 
 import "vuetify/styles";
@@ -16,5 +17,6 @@ const vuetify = createVuetify({
 
 const app = createApp(App)
 app.use(vuetify);
-app.use(router)
+app.use(router);
+app.use(createPinia());
 app.mount("#app");
