@@ -21,15 +21,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-const task = ref("");
-const taskId = ref("");
+const task = ref('');
+const taskId = ref('');
 const formRef = ref(null);
 
 const cancelForm = () => {
-  task.value = "";
-  taskId.value = "";
+  task.value = '';
+  taskId.value = '';
 };
 
 const saveForm = async () => {
@@ -39,23 +39,22 @@ const saveForm = async () => {
   };
 
   try {
-    const response = await fetch("http://localhost:3000/tasks", {
-      method: "POST",
+    const res = await fetch('http://localhost:3000/tasks', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(taskData),
     });
 
-    if (response.ok) {
-      alert("Task added successfully");
+    if (res.ok) {
+      alert('Task saved successfully');
       cancelForm();
     } else {
-      alert("Failed to add task");
+      alert('Failed to save task');
     }
   } catch (error) {
-    console.log("Error:", error);
-    alert("Something went wrong");
+    alert(`Error saving task: ${error.message}`);
   }
 };
 </script>

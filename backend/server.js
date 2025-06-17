@@ -1,10 +1,21 @@
-const http = require("http");
-const fs = require("fs");
+import http from "http";
+import fs from "fs";
 
 const FILE_PATH = "./tasks.json";
 
 const server = http.createServer((req, res) => {
-  if (req.method === "GET" && req.url === "/task") {
+
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
+  if (req.method === "GET" && req.url === "/tasks") {
     fs.readFile(FILE_PATH, "utf8", (err, data) => {
       if (err) {
         res.writeHead(500);
@@ -16,7 +27,7 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  if (req.method === "POST" && req.url === "/task") {
+  if (req.method === "POST" && req.url === "/tasks") {
     let body = "";
     req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
@@ -28,11 +39,11 @@ const server = http.createServer((req, res) => {
 
         fs.writeFile(FILE_PATH, JSON.stringify(tasks, null, 2), "utf8", (err) => {
           if (err) {
-            req.writeHead(500);
-            req.end("Failed to write task");
+            res.writeHead(500);
+            res.end("Failed to write task");
           } else {
             res.writeHead(201, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ message: "task saved" }));
+            res.end(JSON.stringify({ message: "Task saved" }));
           }
         });
       });
