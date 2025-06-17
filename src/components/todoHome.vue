@@ -1,19 +1,19 @@
 <template>
-  <div class="task-container">
-    <div class="task-box">
-      <h2 class="title">Get Things Done!</h2>
-      <div class="btn-wrapper">
-        <v-btn class="task-btn" to="/task">+ New Task</v-btn>
+  <div class="home-page">
+    <div class="home-page__card">
+      <h2 class="home-page__card-title">Get Things Done!</h2>
+      <div class="home-page__card-button-wrapper">
+        <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
       </div>
-      <div v-for="task in tasks" :key="task.id" class="task-item">
-        <div class="task-content">
-          <input type="checkbox" class="task-checkbox" />
+      <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
+        <div class="home-page__card-contents">
+          <input type="checkbox" class="home-page__card-checkbox" />
           <span>{{ task.name }}</span>
         </div>
-        <div class="task-actions">
+        <div class="home-page__card-edit-delete-svg">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="icon"
+            class="home-page__card-icon"
             height="20"
             width="20"
             viewBox="0 0 24 24"
@@ -25,7 +25,7 @@
           </svg>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="icon"
+            class="home-page__card-icon"
             height="20"
             width="20"
             viewBox="0 0 24 24"
@@ -37,8 +37,8 @@
           </svg>
         </div>
       </div>
-      <div class="btn-wrapper mt-6">
-        <button class="delete-all-btn">Delete All</button>
+      <div class="home-page__card-button-wrapper mt-6">
+        <v-btn class="home-page__card-delete-button">Delete All</v-btn>
       </div>
     </div>
   </div>
@@ -46,11 +46,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-
-type Task = {
-  id: number;
-  title: string;
-};
+import Task from '../type/home'
 
 const tasks = ref<Task[]>([]);
 
@@ -60,67 +56,77 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
-.task-container {
+<style lang="scss" scoped>
+.home-page {
   background-color: #a259ff;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.task-box {
-  background-color: #1e1e2f;
-  padding: 24px;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 400px;
-}
-.title {
-  text-align: center;
-  color: white;
-  margin-bottom: 24px;
-}
-.btn-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 24px;
-}
-.task-btn {
-  background-color: #a259ff;
-  color: white;
-  font-size: 16px;
-  text-decoration: none;
-}
-.task-item {
-  background-color: #a259ff;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  padding: 12px 16px;
-  border-radius: 8px;
-}
-.task-content {
-  display: flex;
-  align-items: center;
-}
-.task-checkbox {
-  margin-right: 12px;
-}
-.task-actions {
-  display: flex;
-}
-.icon {
-  margin-left: 12px;
-  cursor: pointer;
-}
-.delete-all-btn {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
+
+  &__card {
+    background-color: #1e1e2f;
+    padding: 24px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 400px;
+
+    &-title{
+      text-align: center;
+      color: white;
+      margin-bottom: 24px;
+    }
+
+    &-button-wrapper{
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    &-button{
+      background-color: #a259ff;
+      color: white;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    &-items{
+      background-color: #a259ff;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+    }
+
+    &-contents{
+      display: flex;
+      align-items: center;
+    }
+
+    &-checkbox{
+      margin-right: 12px;
+    }
+
+    &-edit-delete-svg{
+      display: flex;
+    }
+
+    &-icon{
+      margin-left: 12px;
+      cursor: pointer;
+    }
+
+    &-delete-button{
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+  }
 }
 </style>
