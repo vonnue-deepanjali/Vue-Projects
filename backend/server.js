@@ -1,34 +1,45 @@
-const express = require('express')
-const cors = require('cors')
-const fs = require('fs')
+const http = require('http');
+const fs = require('fs');
 
-const app = express()
-const PORT = 3000
-const FILE_PATH = './tasks.json'
+const FILE_PATH = './tasks.json';
 
-app.use(cors())
-app.use(express.json())
+const server = http.createServer((req, res) => {
+  if (req.method === 'GET' && req.url === '/tasks') {
+    fs.readFile(FILE_PATH, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(500);
+        res.end('Failed to read tasks');
+      } else {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(data || '[]');
+      }
+    });
+  }
 
-app.get('/tasks', (req, res) => {
-  fs.readFile(FILE_PATH, 'utf8', (err, data) => {
-    if (err) return res.status(500).send('Error reading file')
-    res.json(JSON.parse(data || '[]'))
-  })
-})
+  if (req.method === 'POST' && req.url === '/tasks') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      const newTask = JSON.parse(body);
 
-app.post('/tasks', (req, res) => {
-  const newTask = req.body
-  fs.readFile(FILE_PATH, 'utf8', (err, data) => {
-    const tasks = data ? JSON.parse(data) : []
-    tasks.push(newTask)
+      fs.readFile(FILE_PATH, 'utf8', (err, data) => {
+        const tasks = data ? JSON.parse(data) : [];
+        tasks.push(newTask);
 
-    fs.writeFile(FILE_PATH, JSON.stringify(tasks, null, 2), err => {
-      if (err) return res.status(500).send('Error writing file')
-      res.status(201).json({ message: 'Task saved' })
-    })
-  })
-})
+        fs.writeFile(FILE_PATH, JSON.stringify(tasks, null, 2), 'utf8', err => {
+          if (err) {
+            res.writeHead(500);
+            res.end('Failed to write task');
+          } else {
+            res.writeHead(201, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ message: 'Task saved' }));
+          }
+        });
+      });
+    });
+  }
+});
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`)
-})
+server.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
+});
