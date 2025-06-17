@@ -39,7 +39,7 @@ const saveForm = async () => {
   };
 
   try {
-    await fetch("http://localhost:3000/tasks", {
+    const response = await fetch("http://localhost:3000/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,13 +47,15 @@ const saveForm = async () => {
       body: JSON.stringify(taskData),
     });
 
-    task.value = "";
-    taskId.value = "";
-
-    alert("Task saved!");
-  } catch (err) {
-    console.error("Error saving task:", err);
-    alert("Failed to save task");
+    if (response.ok) {
+      alert("Task added successfully");
+      cancelForm();
+    } else {
+      alert("Failed to add task");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Something went wrong");
   }
 };
 </script>
