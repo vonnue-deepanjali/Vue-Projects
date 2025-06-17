@@ -45,11 +45,14 @@
 </template>
 
 <script setup>
-const tasks = [
-  { id: 1, name: "Go shopping" },
-  { id: 2, name: "Eat lunch" },
-  { id: 3, name: "Do laundry" },
-];
+import { ref, onMounted } from 'vue'
+
+const tasks = ref([])
+
+onMounted(async () => {
+  const res = await fetch('http://localhost:3000/tasks')
+  tasks.value = await res.json()
+})
 </script>
 
 <style scoped>
