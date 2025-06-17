@@ -54,7 +54,7 @@ const saveForm = async () => {
       alert("Failed to add task");
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.log("Error:", error);
     alert("Something went wrong");
   }
 };
