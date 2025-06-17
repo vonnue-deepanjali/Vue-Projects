@@ -45,15 +45,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue";
 
-const tasks = ref([])
+const tasks = ref([]);
 
 onMounted(async () => {
-  const res = await fetch('http://localhost:3000/tasks')
-  tasks.value = await res.json()
-})
-</script> 
+  const res = await fetch("http://localhost:3000/tasks");
+  tasks.value = await res.json();
+});
+</script>
 
 <style scoped>
 .app-container {
