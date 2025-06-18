@@ -109,7 +109,7 @@ const saveForm = async (): Promise<void> => {
       flex-direction: column;
       margin-bottom: 16px;
 
-      &label{
+      &label {
         margin-bottom: 6px;
         font-size: 14px;
         color: #ffffff;
