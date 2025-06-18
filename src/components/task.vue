@@ -51,6 +51,7 @@ const saveForm = async (): Promise<void> => {
     if (res.ok) {
       alert('Task saved successfully')
       cancelForm()
+      window.location.href = '/'
     } else {
       const error = await res.json()
       alert(error.message || 'Failed to save task')
