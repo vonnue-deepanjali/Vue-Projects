@@ -22,7 +22,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import TaskData from '@/type/task'
+
+const route = useRouter()
 
 const task = ref<string>('')
 const estimatedTime = ref<string>('')
@@ -40,7 +43,7 @@ const saveForm = async (): Promise<void> => {
   }
 
   try {
-    const res = await fetch('http://localhost:7000/tasks', {
+    const res = await fetch('http://localhost:3000/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +54,7 @@ const saveForm = async (): Promise<void> => {
     if (res.ok) {
       alert('Task saved successfully')
       cancelForm()
-      window.location.href = '/'
+      route.push('/')
     } else {
       const error = await res.json()
       alert(error.message || 'Failed to save task')

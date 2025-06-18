@@ -51,7 +51,7 @@ import Task from '../type/home'
 const tasks = ref<Task[]>([]);
 
 onMounted(async () => {
-  const res = await fetch("http://localhost:7000/tasks");
+  const res = await fetch("http://localhost:3000/tasks");
   tasks.value = await res.json();
 });
 </script>
