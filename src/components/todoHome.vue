@@ -130,7 +130,7 @@ onMounted(async () => {
   }
 
 }
-.completed {
+.completed{
   text-decoration: line-through;
 }
 </style>
