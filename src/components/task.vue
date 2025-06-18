@@ -43,7 +43,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
 import TaskData from '@/type/task'
+
+const route = useRouter()
 
 const task = ref<string>("");
 const estimatedTime = ref<string>("");
@@ -71,6 +74,7 @@ const saveForm = async (): Promise<void> => {
 
     if (res.ok) {
       alert('Task saved successfully')
+      route.push('/')
       cancelForm()
     } else {
       const error = await res.json();

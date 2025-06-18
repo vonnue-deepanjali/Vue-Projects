@@ -7,7 +7,7 @@
       </div>
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
-          <input type="checkbox" class="home-page__card-checkbox" v-model="task.completed" />
+          <input type="checkbox" class="home-page__card-checkbox" v-model="task.completed" @change=updateCompleted(task) />
           <span :class="{ completed: task.completed }">{{ task.name }} | {{ task.estimatedTime }}</span>
         </div>
         <div class="home-page__card-edit-delete-svg">
@@ -64,6 +64,21 @@ const handleEdit = (task: Task) => {
   taskStore.setTaskToEdit(task);
   router.push("/edit"); 
 };
+
+const updateCompleted = async (task: Task) => {
+  try {
+    await fetch(`http://localhost:3000/tasks/${task.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
+    });
+  } catch (error: any) {
+    alert("Failed to update completion status: " + error.message);
+  }
+};
+
 </script>
 
 

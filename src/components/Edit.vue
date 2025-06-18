@@ -1,37 +1,37 @@
 <template>
-  <div class="add-task-page">
-    <div class="add-task-page__card">
-      <h2 class="add-task-page__card-title">Edit Task!</h2>
+  <div class="edit-task-page">
+    <div class="edit-task-page__card">
+      <h2 class="edit-task-page__card-title">Edit Task!</h2>
       <v-form @submit.prevent="saveForm" ref="formRef">
-        <div class="add-task-page__card-input">
+        <div class="edit-task-page__card-input">
           <label for="task">Task:</label>
           <input
             id="task"
             v-model="task"
             type="text"
-            class="add-task-page__card-custom-input"
+            class="edit-task-page__card-custom-input"
             required
           />
         </div>
-        <div class="add-task-page__card-input">
+        <div class="edit-task-page__card-input">
           <label for="estimatedTime">Estimate Time:</label>
           <input
             id="estimatedTime"
             v-model="estimatedTime"
             type="text"
-            class="add-task-page__card-custom-input"
+            class="edit-task-page__card-custom-input"
             required
           />
         </div>
-        <div class="add-task-page__card-button">
+        <div class="edit-task-page__card-button">
           <v-btn
-            class="add-task-page__card-custom-button add-task-page__card-cancel-button"
+            class="edit-task-page__card-custom-button edit-task-page__card-cancel-button"
             @click="cancelForm"
             type="button"
             >Cancel</v-btn
           >
           <v-btn
-            class="add-task-page__card-custom-button add-task-page__card-save-button"
+            class="edit-task-page__card-custom-button edit-task-page__card-save-button"
             type="submit"
             >Save</v-btn
           >
@@ -104,7 +104,7 @@ const saveForm = async (): Promise<void> => {
 </script>
 
 <style lang="scss" scoped>
-.add-task-page {
+.edit-task-page {
   background-color: #a259ff;
   min-height: 100vh;
   display: flex;
