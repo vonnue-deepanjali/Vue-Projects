@@ -59,7 +59,6 @@ onMounted(() => {
     task.value = editingTask.name;
     estimatedTime.value = editingTask.estimatedTime;
   } else {
-    // If no task set, redirect back
     router.push("/");
   }
 });
@@ -74,7 +73,7 @@ const saveForm = async (): Promise<void> => {
   if (!taskStore.taskToEdit) return;
 
   const updatedTask = {
-    id: taskStore.taskToEdit.id, // keep the same ID
+    id: taskStore.taskToEdit.id, 
     name: task.value,
     estimatedTime: estimatedTime.value,
     completed: taskStore.taskToEdit.completed,
@@ -82,7 +81,7 @@ const saveForm = async (): Promise<void> => {
 
   try {
     const res = await fetch(`http://localhost:3000/tasks/${updatedTask.id}`, {
-      method: "PUT", // use PUT for editing
+      method: "PUT", 
       headers: {
         "Content-Type": "application/json",
       },

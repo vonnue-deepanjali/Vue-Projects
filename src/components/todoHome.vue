@@ -62,7 +62,7 @@ onMounted(async () => {
 
 const handleEdit = (task: Task) => {
   taskStore.setTaskToEdit(task);
-  router.push("/edit"); // navigate using vue-router
+  router.push("/edit"); 
 };
 </script>
 

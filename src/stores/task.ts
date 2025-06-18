@@ -1,4 +1,3 @@
-// stores/task.ts
 import { defineStore } from 'pinia'
 import type { Task } from '@/type/home'
 
