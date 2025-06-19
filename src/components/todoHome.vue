@@ -7,7 +7,7 @@
       </div>
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
-          <input
+          <v-checkbox
             type="checkbox"
             class="home-page__card-checkbox"
             v-model="task.completed"
@@ -151,6 +151,14 @@ const updateCompleted = async (task: Task) => {
   }
   .completed {
     text-decoration: line-through;
+  }
+
+  ::v-deep(.v-input__details) {
+    grid-area: unset !important;
+  }
+
+  ::v-deep(.v-checkbox .v-selection-control) {
+    min-height: unset !important;
   }
 }
 </style>
