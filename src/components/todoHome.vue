@@ -7,8 +7,8 @@
       </div>
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
-          <input type="checkbox" class="home-page__card-checkbox" />
-          <span>{{ task.name }}</span>
+          <input type="checkbox" class="home-page__card-checkbox" v-model="task.completed" />
+          <span :class="{ completed: task.completed }">{{ task.name }} | {{ task.estimatedTime }}</span>
         </div>
         <div class="home-page__card-edit-delete-svg">
           <svg
@@ -137,6 +137,9 @@ const handleEdit = (task: Task) => {
       border-radius: 8px;
       font-size: 14px;
     }
+  }
+  .completed{
+    text-decoration: line-through;
   }
 }
 </style>
