@@ -2,7 +2,7 @@ type Task = {
   id: string;             
   name: string;
   estimatedTime: string;
-  completed: boolean;
+  isCompleted: boolean;
 };
 
 export default Task;

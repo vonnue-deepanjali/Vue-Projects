@@ -7,10 +7,11 @@
       </div>
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
-          <input
+          <v-checkbox
             type="checkbox"
             class="home-page__card-checkbox"
             v-model="task.completed"
+            label="hello"
             @change="updateCompleted(task)"
           />
           <span :class="{ completed: task.completed }"

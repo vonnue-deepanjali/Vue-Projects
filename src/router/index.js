@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import TaskView from "../views/TaskView.vue";
 import HomeView from "../views/HomeView.vue";
-import EditView from '../views/EditView.vue' 
+import EditView from "../views/EditView.vue";
+import Test from "../components/Test.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -18,8 +20,9 @@ const router = createRouter({
     {
       path: "/edit",
       name: "edit",
-      component: EditView
+      component: EditView,
     },
+    { path: "/test", name: "test", component: Test },
   ],
 });
 export default router;
