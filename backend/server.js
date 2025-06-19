@@ -73,6 +73,53 @@ const server = http.createServer((req, res) => {
       }
     });
   }
+
+  if (req.method === "PUT" && req.url.startsWith("/tasks/")) {
+    const taskId = req.url.split("/")[2];
+    let body = "";
+
+    req.on("data", (chunk) => {
+      body += chunk;
+    });
+
+    req.on("end", () => {
+      try {
+        const updatedTask = JSON.parse(body);
+
+        fs.readFile(FILE_PATH, "utf8", (err, data) => {
+          if (err) {
+            res.writeHead(500);
+            res.end("Failed to read tasks");
+            return;
+          }
+
+          let tasks = data ? JSON.parse(data) : [];
+          const index = tasks.findIndex((t) => t.id === taskId);
+
+          if (index === -1) {
+            res.writeHead(404);
+            res.end("Task not found");
+            return;
+          }
+
+          tasks[index] = updatedTask;
+
+          fs.writeFile(FILE_PATH, JSON.stringify(tasks, null, 2), "utf8", (err) => {
+            if (err) {
+              res.writeHead(500);
+              res.end("Failed to update task");
+            } else {
+              res.writeHead(200, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ message: "Task updated", task: updatedTask }));
+            }
+          });
+        });
+      } catch (err) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "Invalid JSON format" }));
+      }
+    });
+  }
 });
 
 server.listen(7000, () => {

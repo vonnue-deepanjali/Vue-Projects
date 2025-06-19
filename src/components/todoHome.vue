@@ -12,6 +12,7 @@
         </div>
         <div class="home-page__card-edit-delete-svg">
           <svg
+            @click="handleEdit(task)"
             xmlns="http://www.w3.org/2000/svg"
             class="home-page__card-icon"
             height="20"
@@ -46,14 +47,23 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import Task from '../type/home'
+import { useRouter } from "vue-router";
+import { useTaskStore } from "@/stores/task";
+import type { Task } from "@/type/home";
 
 const tasks = ref<Task[]>([]);
+const taskStore = useTaskStore();
+const router = useRouter();
 
 onMounted(async () => {
   const res = await fetch("http://localhost:7000/tasks");
   tasks.value = await res.json();
 });
+
+const handleEdit = (task: Task) => {
+  taskStore.setTaskToEdit(task);
+  router.push("/edit");
+};
 </script>
 
 <style lang="scss" scoped>
@@ -71,26 +81,26 @@ onMounted(async () => {
     width: 100%;
     max-width: 400px;
 
-    &-title{
+    &-title {
       text-align: center;
       color: white;
       margin-bottom: 24px;
     }
 
-    &-button-wrapper{
+    &-button-wrapper {
       display: flex;
       justify-content: center;
       margin-bottom: 24px;
     }
 
-    &-button{
+    &-button {
       background-color: #a259ff;
       color: white;
       font-size: 16px;
       text-decoration: none;
     }
 
-    &-items{
+    &-items {
       background-color: #a259ff;
       color: white;
       display: flex;
@@ -101,25 +111,25 @@ onMounted(async () => {
       border-radius: 8px;
     }
 
-    &-contents{
+    &-contents {
       display: flex;
       align-items: center;
     }
 
-    &-checkbox{
+    &-checkbox {
       margin-right: 12px;
     }
 
-    &-edit-delete-svg{
+    &-edit-delete-svg {
       display: flex;
     }
 
-    &-icon{
+    &-icon {
       margin-left: 12px;
       cursor: pointer;
     }
 
-    &-delete-button{
+    &-delete-button {
       background-color: #ff4d4d;
       color: white;
       border: none;

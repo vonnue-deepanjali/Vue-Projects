@@ -1,37 +1,37 @@
 <template>
-  <div class="add-task-page">
-    <div class="add-task-page__card">
-      <h2 class="add-task-page__card-title">Add New Task!</h2>
+  <div class="edit-task-page">
+    <div class="edit-task-page__card">
+      <h2 class="edit-task-page__card-title">Edit Task!</h2>
       <v-form @submit.prevent="saveForm" ref="formRef">
-        <div class="add-task-page__card-input">
+        <div class="edit-task-page__card-input">
           <label for="task">Task:</label>
           <input
             id="task"
             v-model="task"
             type="text"
-            class="add-task-page__card-custom-input"
+            class="edit-task-page__card-custom-input"
             required
           />
         </div>
-        <div class="add-task-page__card-input">
+        <div class="edit-task-page__card-input">
           <label for="estimatedTime">Estimate Time:</label>
           <input
             id="estimatedTime"
             v-model="estimatedTime"
             type="text"
-            class="add-task-page__card-custom-input"
+            class="edit-task-page__card-custom-input"
             required
           />
         </div>
-        <div class="add-task-page__card-button">
+        <div class="edit-task-page__card-button">
           <v-btn
-            class="add-task-page__card-custom-button add-task-page__card-cancel-button"
+            class="edit-task-page__card-custom-button edit-task-page__card-cancel-button"
             @click="cancelForm"
             type="button"
             >Cancel</v-btn
           >
           <v-btn
-            class="add-task-page__card-custom-button add-task-page__card-save-button"
+            class="edit-task-page__card-custom-button edit-task-page__card-save-button"
             type="submit"
             >Save</v-btn
           >
@@ -42,52 +42,69 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import TaskData from "@/type/task";
+import { useTaskStore } from "@/stores/task";
 
-const route = useRouter();
+const router = useRouter();
+const taskStore = useTaskStore();
 
-const task = ref<string>("");
-const estimatedTime = ref<string>("");
+const task = ref("");
+const estimatedTime = ref("");
 const formRef = ref<HTMLFormElement | null>(null);
+
+onMounted(() => {
+  const editingTask = taskStore.taskToEdit;
+  if (editingTask) {
+    task.value = editingTask.name;
+    estimatedTime.value = editingTask.estimatedTime;
+  } else {
+    router.push("/");
+  }
+});
 
 const cancelForm = (): void => {
   task.value = "";
   estimatedTime.value = "";
+  taskStore.setTaskToEdit(null);
+  router.push("/");
 };
 
 const saveForm = async (): Promise<void> => {
-  const taskData: TaskData = {
+  if (!taskStore.taskToEdit) return;
+
+  const updatedTask = {
+    id: taskStore.taskToEdit.id,
     name: task.value,
     estimatedTime: estimatedTime.value,
+    completed: taskStore.taskToEdit.completed,
   };
 
   try {
-    const res = await fetch("http://localhost:7000/tasks", {
-      method: "POST",
+    const res = await fetch(`http://localhost:3000/tasks/${updatedTask.id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(taskData),
+      body: JSON.stringify(updatedTask),
     });
 
     if (res.ok) {
-      alert("Task saved successfully");
-      cancelForm();
-      route.push("/");
+      alert("Task updated successfully");
+      taskStore.setTaskToEdit(null);
+      router.push("/");
     } else {
       const error = await res.json();
-      alert(error.message || "Failed to save task");
+      alert(error.message || "Failed to update task");
     }
   } catch (error: any) {
-    console.error(`Error saving task: ${error.message}`);
+    console.error(`Error updating task: ${error.message}`);
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.add-task-page {
+.edit-task-page {
   background-color: #a259ff;
   min-height: 100vh;
   display: flex;
