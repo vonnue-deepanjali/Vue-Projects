@@ -72,7 +72,7 @@ const updateCompleted = async (task: Task) => {
       body: JSON.stringify(task),
     });
   } catch (error: any) {
-    alert("Failed to update completion status: " + error.message);
+    console.error("Failed to update completion status:", error.message);
   }
 };
 </script>
