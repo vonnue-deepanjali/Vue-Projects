@@ -8,12 +8,11 @@
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
           <v-checkbox
-            type="checkbox"
             class="home-page__card-checkbox"
             v-model="task.completed"
-            label="hello"
             @change="updateCompleted(task)"
           />
+
           <span :class="{ completed: task.completed }"
             >{{ task.name }} | {{ task.estimatedTime }}</span
           >
@@ -164,4 +163,9 @@ const updateCompleted = async (task: Task) => {
 .completed {
   text-decoration: line-through;
 }
+::v-deep(.v-input__details) {
+  grid-area: unset !important;
+}
+
+
 </style>
