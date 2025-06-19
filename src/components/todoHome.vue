@@ -7,12 +7,19 @@
       </div>
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
-          <input type="checkbox" class="home-page__card-checkbox" v-model="task.completed" @change=updateCompleted(task) />
-          <span :class="{ completed: task.completed }">{{ task.name }} | {{ task.estimatedTime }}</span>
+          <input
+            type="checkbox"
+            class="home-page__card-checkbox"
+            v-model="task.completed"
+            @change="updateCompleted(task)"
+          />
+          <span :class="{ completed: task.completed }"
+            >{{ task.name }} | {{ task.estimatedTime }}</span
+          >
         </div>
         <div class="home-page__card-edit-delete-svg">
           <svg
-           @click="handleEdit(task)"
+            @click="handleEdit(task)"
             xmlns="http://www.w3.org/2000/svg"
             class="home-page__card-icon"
             height="20"
@@ -47,7 +54,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 import { useTaskStore } from "@/stores/task";
 import type { Task } from "@/type/home";
 
@@ -62,7 +69,7 @@ onMounted(async () => {
 
 const handleEdit = (task: Task) => {
   taskStore.setTaskToEdit(task);
-  router.push("/edit"); 
+  router.push("/edit");
 };
 
 const updateCompleted = async (task: Task) => {
@@ -75,14 +82,10 @@ const updateCompleted = async (task: Task) => {
       body: JSON.stringify(task),
     });
   } catch (error: any) {
-    alert("Failed to update completion status: " + error.message);
+    console.error("Failed to update completion status:", error.message);
   }
 };
-
 </script>
-
-
-
 
 <style lang="scss" scoped>
 .home-page {
@@ -99,26 +102,26 @@ const updateCompleted = async (task: Task) => {
     width: 100%;
     max-width: 400px;
 
-    &-title{
+    &-title {
       text-align: center;
       color: white;
       margin-bottom: 24px;
     }
 
-    &-button-wrapper{
+    &-button-wrapper {
       display: flex;
       justify-content: center;
       margin-bottom: 24px;
     }
 
-    &-button{
+    &-button {
       background-color: #a259ff;
       color: white;
       font-size: 16px;
       text-decoration: none;
     }
 
-    &-items{
+    &-items {
       background-color: #a259ff;
       color: white;
       display: flex;
@@ -129,25 +132,25 @@ const updateCompleted = async (task: Task) => {
       border-radius: 8px;
     }
 
-    &-contents{
+    &-contents {
       display: flex;
       align-items: center;
     }
 
-    &-checkbox{
+    &-checkbox {
       margin-right: 12px;
     }
 
-    &-edit-delete-svg{
+    &-edit-delete-svg {
       display: flex;
     }
 
-    &-icon{
+    &-icon {
       margin-left: 12px;
       cursor: pointer;
     }
 
-    &-delete-button{
+    &-delete-button {
       background-color: #ff4d4d;
       color: white;
       border: none;
@@ -156,9 +159,8 @@ const updateCompleted = async (task: Task) => {
       font-size: 14px;
     }
   }
-
 }
-.completed{
+.completed {
   text-decoration: line-through;
 }
 </style>
