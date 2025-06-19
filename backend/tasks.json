@@ -1,13 +1,13 @@
 [
   {
     "id": "1750250604644-homework",
-    "name": "home work",
+    "name": "home works",
     "estimatedTime": "6 mins",
     "completed": true
   },
   {
     "id": "1750250614661-coding",
-    "name": "coding",
+    "name": "coding vue",
     "estimatedTime": "7 mins",
     "completed": true
   },

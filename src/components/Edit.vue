@@ -97,7 +97,7 @@ const saveForm = async (): Promise<void> => {
       alert(error.message || "Failed to update task");
     }
   } catch (error: any) {
-    alert(`Error updating task: ${error.message}`);
+    console.error(`Error updating task: ${error.message}`);
   }
 };
 

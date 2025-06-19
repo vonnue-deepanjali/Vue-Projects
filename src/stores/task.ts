@@ -3,7 +3,6 @@ import type { Task } from '@/type/home'
 
 export const useTaskStore = defineStore('task', {
   state: () => ({
-    tasks: [] as Task[],
     taskToEdit: null as Task | null
   }),
   actions: {
