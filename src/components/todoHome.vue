@@ -1,5 +1,5 @@
 <template>
-  <div class="home-page">
+  <!-- <div class="home-page"> -->
     <div class="home-page__card">
       <h2 class="home-page__card-title">Get Things Done!</h2>
       <div class="home-page__card-button-wrapper">
@@ -46,10 +46,10 @@
         </div>
       </div>
       <div class="home-page__card-button-wrapper mt-6">
-        <v-btn class="home-page__card-delete-button" >Delete All</v-btn>
+        <v-btn class="home-page__card-delete-button">Delete All</v-btn>
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script setup lang="ts">
@@ -57,7 +57,6 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useTaskStore } from "@/stores/task";
 import type { Task } from "@/type/home";
-
 const tasks = ref<Task[]>([]);
 const taskStore = useTaskStore();
 const router = useRouter();
@@ -87,17 +86,14 @@ const updateCompleted = async (task: Task) => {
 };
 
 
+
+
+
+
 </script>
 
 <style lang="scss" scoped>
-.home-page {
-  background-color: #a259ff;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &__card {
+.home-page__card {
     background-color: #1e1e2f;
     padding: 24px;
     border-radius: 16px;
@@ -161,7 +157,7 @@ const updateCompleted = async (task: Task) => {
       font-size: 14px;
     }
   }
-}
+
 .completed {
   text-decoration: line-through;
 }

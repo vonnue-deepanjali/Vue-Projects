@@ -4,15 +4,16 @@ import fs from "fs";
 const FILE_PATH = "./tasks.json";
 
 const server = http.createServer((req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT OPTIONS");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") {
-    res.writeHead(204);
+    res.writeHead(200);
     res.end();
     return;
   }
+
   if (req.method === "GET" && req.url === "/tasks") {
     fs.readFile(FILE_PATH, "utf8", (err, data) => {
       if (err) {
@@ -74,37 +75,36 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  
   if (req.method === "PUT" && req.url.startsWith("/tasks/")) {
-    const taskId = req.url.split("/")[2]; 
+    const taskId = req.url.split("/")[2];
     let body = "";
-  
+
     req.on("data", (chunk) => {
       body += chunk;
     });
-  
+
     req.on("end", () => {
       try {
         const updatedTask = JSON.parse(body);
-  
+
         fs.readFile(FILE_PATH, "utf8", (err, data) => {
           if (err) {
             res.writeHead(500);
             res.end("Failed to read tasks");
             return;
           }
-  
+
           let tasks = data ? JSON.parse(data) : [];
           const index = tasks.findIndex((t) => t.id === taskId);
-  
+
           if (index === -1) {
             res.writeHead(404);
             res.end("Task not found");
             return;
           }
-  
+
           tasks[index] = updatedTask;
-  
+
           fs.writeFile(FILE_PATH, JSON.stringify(tasks, null, 2), "utf8", (err) => {
             if (err) {
               res.writeHead(500);
