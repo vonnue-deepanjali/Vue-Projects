@@ -55,8 +55,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useTaskStore } from "@/stores/task";
 import type { Task } from "@/type/home";
+import { useTaskStore } from "@/Stores/task";
 
 const tasks = ref<Task[]>([]);
 const taskStore = useTaskStore();

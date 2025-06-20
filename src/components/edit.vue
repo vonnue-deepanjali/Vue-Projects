@@ -42,9 +42,9 @@
 </template>
 
 <script setup lang="ts">
+import { useTaskStore } from "@/Stores/task";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useTaskStore } from "@/stores/task";
 
 const router = useRouter();
 const taskStore = useTaskStore();
