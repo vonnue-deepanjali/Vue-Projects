@@ -46,11 +46,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import TaskData from "@/type/task";
 
-<<<<<<< HEAD
 const route = useRouter();
-=======
-const route = useRouter()
->>>>>>> main
 
 const task = ref<string>("");
 const estimatedTime = ref<string>("");

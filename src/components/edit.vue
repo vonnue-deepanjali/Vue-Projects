@@ -49,8 +49,8 @@ import { useTaskStore } from "@/stores/task";
 const router = useRouter();
 const taskStore = useTaskStore();
 
-const task = ref("");
-const estimatedTime = ref("");
+const task = ref<string>("");
+const estimatedTime = ref<string>("");
 const formRef = ref<HTMLFormElement | null>(null);
 
 onMounted(() => {
