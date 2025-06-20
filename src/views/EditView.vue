@@ -1,7 +1,7 @@
 <template>
-  <edit />
+  <editTask />
 </template>
 
 <script lang=ts setup>
-import edit from "@/components/edit.vue";
+import editTask from "@/components/editTask.vue";
 </script>
