@@ -7,8 +7,15 @@
       </div>
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
-          <input type="checkbox" class="home-page__card-checkbox" v-model="task.completed" />
-          <span :class="{ completed: task.completed }">{{ task.name }} | {{ task.estimatedTime }}</span>
+          <v-checkbox
+            type="checkbox"
+            class="home-page__card-checkbox"
+            v-model="task.completed"
+            @change="updateCompleted(task)"
+          />
+          <span :class="{ completed: task.completed }"
+            >{{ task.name }} | {{ task.estimatedTime }}</span
+          >
         </div>
         <div class="home-page__card-edit-delete-svg">
           <svg
@@ -138,8 +145,16 @@ const handleEdit = (task: Task) => {
       font-size: 14px;
     }
   }
-  .completed{
+  .completed {
     text-decoration: line-through;
+  }
+
+  ::v-deep(.v-input__details) {
+    grid-area: unset !important;
+  }
+
+  ::v-deep(.v-checkbox .v-selection-control) {
+    min-height: unset !important;
   }
 }
 </style>
