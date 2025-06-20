@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="home-page__card-button-wrapper mt-6">
-        <v-btn class="home-page__card-delete-button">Delete All</v-btn>
+        <v-btn class="home-page__card-delete-button" >Delete All</v-btn>
       </div>
     </div>
   </div>
@@ -85,6 +85,8 @@ const updateCompleted = async (task: Task) => {
     console.error("Failed to update completion status:", error.message);
   }
 };
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -166,6 +168,7 @@ const updateCompleted = async (task: Task) => {
 ::v-deep(.v-input__details) {
   grid-area: unset !important;
 }
-
-
+::v-deep(.v-checkbox .v-selection-control) {
+  min-height: unset !important;
+}
 </style>
