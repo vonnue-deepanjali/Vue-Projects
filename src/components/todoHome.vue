@@ -19,7 +19,6 @@
         </div>
         <div class="home-page__card-edit-delete-svg">
           <svg
-            @click="handleEdit(task)"
             xmlns="http://www.w3.org/2000/svg"
             class="home-page__card-icon"
             height="20"
@@ -54,22 +53,27 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import type { Task } from "@/type/home";
-import { useTaskStore } from "@/Stores/task";
+import Task from "../type/home";
 
 const tasks = ref<Task[]>([]);
-const taskStore = useTaskStore();
-const router = useRouter();
 
 onMounted(async () => {
   const res = await fetch("http://localhost:7000/tasks");
   tasks.value = await res.json();
 });
 
-const handleEdit = (task: Task) => {
-  taskStore.setTaskToEdit(task);
-  router.push("/edit");
+const updateCompleted = async (task: Task) => {
+  try {
+    await fetch(`http://localhost:7000/tasks/${task.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
+    });
+  } catch (error: any) {
+    console.error("Failed to update completion status:", error.message);
+  }
 };
 </script>
 
