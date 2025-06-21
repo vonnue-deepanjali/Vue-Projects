@@ -15,8 +15,8 @@ import type TaskData from '@/type/task';
 
 const router = useRouter();
 
-const task = ref('');
-const estimatedTime = ref('');
+const task = ref<string>('');
+const estimatedTime = ref<string>('');
 
 
 const cancelForm = (): void => {
@@ -27,7 +27,7 @@ const cancelForm = (): void => {
 
 const saveForm = async (data: { task: string; estimatedTime: string }): Promise<void> => {
   const taskData: TaskData = {
-    name: data.task,
+    name: data.name,
     estimatedTime: data.estimatedTime,
   };
 

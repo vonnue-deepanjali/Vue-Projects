@@ -73,7 +73,7 @@ watch(
 
 const onSubmit = () => {
   emit("save", {
-    task: localTask.value,
+    name: localTask.value,
     estimatedTime: localEstimatedTime.value,
   });
 };
