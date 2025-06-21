@@ -43,38 +43,35 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import type { Task } from "@/type/home";
 
 const props = defineProps<{
   title: string;
-  task?: string;
-  estimatedTime?: string;
+  taskData?: Task | null;
 }>();
 
 const emit = defineEmits<{
-  (e: "save", data: { task: string; estimatedTime: string }): void;
+  (e: "save", data: Task): void;
   (e: "cancel"): void;
 }>();
 
-const localTask = ref(props.task || "");
-const localEstimatedTime = ref(props.estimatedTime || "");
+const localTask = ref<string>(props.taskData?.name || "");
+const localEstimatedTime = ref<string>(props.taskData?.estimatedTime || "");
 
 watch(
-  () => props.task,
-  (val) => {
-    localTask.value = val || "";
-  }
-);
-
-watch(
-  () => props.estimatedTime,
-  (val) => {
-    localEstimatedTime.value = val || "";
-  }
+  () => props.taskData,
+  (task) => {
+    if (task) {
+      localTask.value = task.name;
+      localEstimatedTime.value = task.estimatedTime;
+    }
+  },
+  { immediate: true }
 );
 
 const onSubmit = () => {
   emit("save", {
-    task: localTask.value,
+    name: localTask.value,
     estimatedTime: localEstimatedTime.value,
   });
 };
