@@ -55,8 +55,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+
 import { useTaskStore } from "@/stores/task";
 import type { Task } from "@/type/home";
+
 const tasks = ref<Task[]>([]);
 const taskStore = useTaskStore();
 const router = useRouter();
@@ -67,26 +69,25 @@ onMounted(async () => {
 });
 
 const handleEdit = (task: Task) => {
-  taskStore.setTaskToEdit(task);
+  taskStore.taskToEdit = task;
   router.push("/edit");
 };
 
 const updateCompleted = async (task: Task) => {
   try {
     await fetch(`http://localhost:3000/tasks/${task.id}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(task),
+      body: JSON.stringify({
+        completed: task.completed,
+      }),
     });
   } catch (error: any) {
     console.error("Failed to update completion status:", error.message);
   }
 };
-
-
-
 
 
 

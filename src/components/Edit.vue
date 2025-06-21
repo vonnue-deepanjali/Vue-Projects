@@ -1,48 +1,57 @@
 <template>
-  <TaskForm
-    title="Edit Task!"
-    :task="taskToEdit?.name"
-    :estimatedTime="taskToEdit?.estimatedTime"
-    @save="updateForm"
-    @cancel="cancelForm"
-  />
+ <TaskForm
+  title="Edit Task!"
+  :taskData="taskToEdit"
+  @save="updateForm"
+  @cancel="cancelForm"
+/>
+
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { useTaskStore } from '@/stores/task';
-import TaskForm from './TaskForm.vue';
+import { useRouter } from "vue-router";
+
+import { useTaskStore } from "@/stores/task";
+import TaskForm from "./TaskForm.vue";
 
 const router = useRouter();
 const taskStore = useTaskStore();
-const { taskToEdit } = storeToRefs(taskStore); // ✅ makes it reactive
+const taskToEdit = taskStore.taskToEdit;
 
 const updateForm = async (data: { task: string; estimatedTime: string }) => {
-  if (!taskToEdit.value) return;
+  if (!taskStore.taskToEdit) {
+    alert("No task selected for editing.");
+    return;
+  }
 
   const updatedTask = {
-    ...taskToEdit.value,
+    ...taskStore.taskToEdit,
     name: data.task,
-    estimatedTime: data.estimatedTime
+    estimatedTime: data.estimatedTime,
   };
 
-  // PUT to backend
-  const res = await fetch(`http://localhost:3000/tasks/${updatedTask.id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updatedTask)
-  });
+  try {
+    await fetch(`http://localhost:3000/tasks/${updatedTask.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: updatedTask.name,
+        estimatedTime: updatedTask.estimatedTime,
+      }),
+    });
 
-  if (res.ok) {
-    alert('Task updated successfully');
-    router.push('/');
-  } else {
-    alert('Failed to update task');
+    alert("Task updated successfully");
+    taskStore.taskToEdit = null;
+    router.push("/");
+  } catch (err) {
+    console.error("Update failed:", err);
+    alert("Something went wrong while updating the task");
   }
 };
 
 const cancelForm = () => {
-  router.push('/');
+  router.push("/");
 };
 </script>

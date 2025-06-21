@@ -5,7 +5,7 @@ const FILE_PATH = "./tasks.json";
 
 const server = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT,OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") {
@@ -75,43 +75,44 @@ const server = http.createServer((req, res) => {
     });
   }
 
-  if (req.method === "PUT" && req.url.startsWith("/tasks/")) {
+  if (req.method === "PATCH" && req.url.startsWith("/tasks/")) {
     const taskId = req.url.split("/")[2];
     let body = "";
-
+  
     req.on("data", (chunk) => {
       body += chunk;
     });
-
+  
     req.on("end", () => {
       try {
-        const updatedTask = JSON.parse(body);
-
+        const partialUpdate = JSON.parse(body);
+  
         fs.readFile(FILE_PATH, "utf8", (err, data) => {
           if (err) {
             res.writeHead(500);
             res.end("Failed to read tasks");
             return;
           }
-
+  
           let tasks = data ? JSON.parse(data) : [];
           const index = tasks.findIndex((t) => t.id === taskId);
-
+  
           if (index === -1) {
             res.writeHead(404);
             res.end("Task not found");
             return;
           }
-
-          tasks[index] = updatedTask;
-
+  
+          // Only update the fields provided in the patch
+          tasks[index] = { ...tasks[index], ...partialUpdate };
+  
           fs.writeFile(FILE_PATH, JSON.stringify(tasks, null, 2), "utf8", (err) => {
             if (err) {
               res.writeHead(500);
               res.end("Failed to update task");
             } else {
               res.writeHead(200, { "Content-Type": "application/json" });
-              res.end(JSON.stringify({ message: "Task updated", task: updatedTask }));
+              res.end(JSON.stringify({ message: "Task updated", task: tasks[index] }));
             }
           });
         });
@@ -121,6 +122,7 @@ const server = http.createServer((req, res) => {
       }
     });
   }
+  
 
   
 });

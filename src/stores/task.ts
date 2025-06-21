@@ -5,12 +5,7 @@ import type { Task } from '@/type/home'
 export const useTaskStore = defineStore('task', () => {
   const taskToEdit = ref<Task | null>(null)
 
-  function setTaskToEdit(task: Task) {
-    taskToEdit.value = task
-  }
-
   return {
-    taskToEdit,
-    setTaskToEdit
+    taskToEdit
   }
 })
