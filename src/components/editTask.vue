@@ -9,14 +9,14 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { useTaskStore } from '@/stores/task';
-import TaskForm from './TaskForm.vue';
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useTaskStore } from "@/stores/task";
+import TaskForm from "./TaskForm.vue";
 
 const router = useRouter();
 const taskStore = useTaskStore();
-const { taskToEdit } = storeToRefs(taskStore); 
+const { taskToEdit } = storeToRefs(taskStore);
 
 const updateForm = async (data: { task: string; estimatedTime: string }) => {
   if (!taskToEdit.value) return;
@@ -24,24 +24,24 @@ const updateForm = async (data: { task: string; estimatedTime: string }) => {
   const updatedTask = {
     ...taskToEdit.value,
     name: data.task,
-    estimatedTime: data.estimatedTime
+    estimatedTime: data.estimatedTime,
   };
 
   const res = await fetch(`http://localhost:7000/tasks/${updatedTask.id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updatedTask)
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedTask),
   });
 
   if (res.ok) {
-    alert('Task updated successfully');
-    router.push('/');
+    alert("Task updated successfully");
+    router.push("/");
   } else {
-    alert('Failed to update task');
+    alert("Failed to update task");
   }
 };
 
 const cancelForm = () => {
-  router.push('/');
+  router.push("/");
 };
 </script>
