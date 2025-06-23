@@ -6,7 +6,6 @@
       <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
     </div>
 
-    <!-- Scrollable task list -->
     <div class="home-page__task-scroll">
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
@@ -37,6 +36,7 @@
             />
           </svg>
           <svg
+            @click="deleteTask(task.id)"
             xmlns="http://www.w3.org/2000/svg"
             class="home-page__card-icon"
             height="20"
@@ -53,7 +53,7 @@
     </div>
 
     <div class="home-page__card-button-wrapper mt-6">
-      <v-btn class="home-page__card-delete-button">Delete All</v-btn>
+      <v-btn class="home-page__card-delete-button" @click="deleteAllTasks()">Delete All</v-btn>
     </div>
   </div>
 </template>
@@ -82,6 +82,30 @@ const handleEdit = (task: Task) => {
 
 const taskCompleted = async (task: Task) => {
   await taskStore.updateCompleted(task);
+};
+
+
+
+const deleteTask = async (taskId: string) => {
+  try {
+    await fetch(`http://localhost:3000/tasks/${taskId}`, {
+      method: "DELETE",
+    });
+    tasks.value = tasks.value.filter((t) => t.id !== taskId); // Update local state
+  } catch (error: any) {
+    console.error("Failed to delete task:", error.message);
+  }
+};
+
+const deleteAllTasks = async () => {
+  try {
+    await fetch("http://localhost:3000/tasks", {
+      method: "DELETE",
+    });
+    tasks.value = []; // Clear all tasks in frontend
+  } catch (error: any) {
+    console.error("Failed to delete all tasks:", error.message);
+  }
 };
 </script>
 
