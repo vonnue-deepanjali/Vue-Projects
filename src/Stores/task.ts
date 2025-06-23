@@ -33,8 +33,29 @@ export const useTaskStore = defineStore("task", () => {
     }
   };
 
+  const updateCompleted = async (task: Task) => {
+    try {
+      const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          completed: task.completed,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to update completion status with status: ${response.status}`);
+      }
+    } catch (error: any) {
+      console.error("Failed to update completion status:", error.message);
+    }
+  };
+
   return {
     taskToEdit,
     updateTask,
+    updateCompleted
   };
 });
