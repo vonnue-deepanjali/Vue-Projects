@@ -15,12 +15,18 @@
     "id": "1750513778861-lunch",
     "name": "lunchee",
     "estimatedTime": "6 mins",
-    "completed": false
+    "completed": true
   },
   {
     "id": "1750514687771-coding",
     "name": "coding vue.js",
     "estimatedTime": "7 min",
+    "completed": false
+  },
+  {
+    "id": "1750651917844-homeworks",
+    "name": "home work",
+    "estimatedTime": "6 mins",
     "completed": false
   }
 ]

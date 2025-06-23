@@ -10,7 +10,7 @@
           <v-checkbox
             class="home-page__card-checkbox"
             v-model="task.completed"
-            @change="updateCompleted(task)"
+            @change="taskCompleted(task)"
           />
 
           <span :class="{ completed: task.completed }"
@@ -73,22 +73,10 @@ const handleEdit = (task: Task) => {
   router.push("/edit");
 };
 
-const updateCompleted = async (task: Task) => {
-  try {
-    await fetch(`http://localhost:3000/tasks/${task.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        completed: task.completed,
-      }),
-    });
-  } catch (error: any) {
-    console.error("Failed to update completion status:", error.message);
-  }
-};
 
+const taskCompleted = async (task: Task) => {
+  await taskStore.updateCompleted(task);
+};
 
 
 </script>
