@@ -51,9 +51,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+
 import Task from "../type/home";
 
 const tasks = ref<Task[]>([]);
+const taskStore = useTaskStore();
 
 onMounted(async () => {
   const res = await fetch("http://localhost:7000/tasks");
@@ -61,17 +63,7 @@ onMounted(async () => {
 });
 
 const taskCompleted = async (task: Task) => {
-  try {
-    await fetch(`http://localhost:7000/tasks/${task.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(task),
-    });
-  } catch (error: any) {
-    console.error("Failed to update completion status:", error.message);
-  }
+  await taskStore.updateCompleted(task);
 };
 </script>
 
