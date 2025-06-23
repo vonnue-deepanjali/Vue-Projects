@@ -1,10 +1,13 @@
 <template>
-  <!-- <div class="home-page"> -->
-    <div class="home-page__card">
-      <h2 class="home-page__card-title">Get Things Done!</h2>
-      <div class="home-page__card-button-wrapper">
-        <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
-      </div>
+  <div class="home-page__card">
+    <h2 class="home-page__card-title">Get Things Done!</h2>
+
+    <div class="home-page__card-button-wrapper">
+      <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
+    </div>
+
+    <!-- Scrollable task list -->
+    <div class="home-page__task-scroll">
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
           <v-checkbox
@@ -13,10 +16,12 @@
             @change="taskCompleted(task)"
           />
 
-          <span :class="{ completed: task.completed }"
-            >{{ task.name }} | {{ task.estimatedTime }}</span
-          >
+          <div :class="{ completed: task.completed }">
+            <div>Task: {{ task.name }}</div>
+            <div>Estimate Time: {{ task.estimatedTime }}</div>
+          </div>
         </div>
+
         <div class="home-page__card-edit-delete-svg">
           <svg
             @click="handleEdit(task)"
@@ -45,11 +50,12 @@
           </svg>
         </div>
       </div>
-      <div class="home-page__card-button-wrapper mt-6">
-        <v-btn class="home-page__card-delete-button">Delete All</v-btn>
-      </div>
     </div>
-  <!-- </div> -->
+
+    <div class="home-page__card-button-wrapper mt-6">
+      <v-btn class="home-page__card-delete-button">Delete All</v-btn>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -65,7 +71,8 @@ const router = useRouter();
 
 onMounted(async () => {
   const res = await fetch("http://localhost:3000/tasks");
-  tasks.value = await res.json();
+  const data = await res.json();
+  tasks.value = data.reverse();
 });
 
 const handleEdit = (task: Task) => {
@@ -73,83 +80,88 @@ const handleEdit = (task: Task) => {
   router.push("/edit");
 };
 
-
 const taskCompleted = async (task: Task) => {
   await taskStore.updateCompleted(task);
 };
-
-
 </script>
 
 <style lang="scss" scoped>
 .home-page__card {
-    background-color: #1e1e2f;
-    padding: 24px;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 400px;
+  background-color: #1e1e2f;
+  padding: 24px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
 
-    &-title {
-      text-align: center;
-      color: white;
-      margin-bottom: 24px;
-    }
-
-    &-button-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
-
-    &-button {
-      background-color: #a259ff;
-      color: white;
-      font-size: 16px;
-      text-decoration: none;
-    }
-
-    &-items {
-      background-color: #a259ff;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      padding: 12px 16px;
-      border-radius: 8px;
-    }
-
-    &-contents {
-      display: flex;
-      align-items: center;
-    }
-
-    &-checkbox {
-      margin-right: 12px;
-    }
-
-    &-edit-delete-svg {
-      display: flex;
-    }
-
-    &-icon {
-      margin-left: 12px;
-      cursor: pointer;
-    }
-
-    &-delete-button {
-      background-color: #ff4d4d;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
+  &-title {
+    text-align: center;
+    color: white;
+    margin-bottom: 24px;
   }
+
+  &-button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  &-button {
+    background-color: #a259ff;
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+  }
+
+  &-items {
+    background-color: #a259ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+
+  &-contents {
+    display: flex;
+    align-items: center;
+  }
+
+  &-checkbox {
+    margin-right: 12px;
+  }
+
+  &-edit-delete-svg {
+    display: flex;
+  }
+
+  &-icon {
+    margin-left: 12px;
+    cursor: pointer;
+  }
+
+  &-delete-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+}
+
+.home-page__task-scroll {
+  max-height: 320px;
+  overflow-y: auto;
+  margin-bottom: 24px;
+  scrollbar-width: none;
+}
 
 .completed {
   text-decoration: line-through;
 }
+
 ::v-deep(.v-input__details) {
   grid-area: unset !important;
 }

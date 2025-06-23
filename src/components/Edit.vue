@@ -2,6 +2,7 @@
  <TaskForm
   title="Edit Task!"
   :taskData="taskStore.taskToEdit"
+  :isEdit="true"
   @save="updateForm"
   @cancel="cancelForm"
 />
@@ -31,10 +32,10 @@ const updateForm = async (task: { name: string; estimatedTime: string }) => {
   });
 
   if (success) {
-    router.push("/"); // Navigate on success
+    router.push("/"); 
   }
 
-  return success; // Let TaskForm decide what message to show
+  return success; 
 };
 
 

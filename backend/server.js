@@ -56,8 +56,9 @@ const server = http.createServer((req, res) => {
             estimatedTime: newTask.estimatedTime,
             completed: false,
           };
-
+          
           tasks.push(taskToSave);
+        
           fs.writeFile(FILE_PATH, JSON.stringify(tasks, null, 2), "utf8", (err) => {
             if (err) {
               res.writeHead(500);
