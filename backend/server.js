@@ -5,7 +5,7 @@ const FILE_PATH = "./tasks.json";
 
 const server = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") {
@@ -70,6 +70,42 @@ const server = http.createServer((req, res) => {
       } catch (err) {
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ message: "Invalid JSON format" }));
+      }
+    });
+  }
+
+  if (req.method === "DELETE" && req.url.startsWith("/tasks/")) {
+    const taskId = req.url.split("/")[2];
+    fs.readFile(FILE_PATH, "utf8", (err, data) => {
+      if (err) {
+        res.writeHead(500);
+        res.end("Failed to read tasks");
+        return;
+      }
+
+      let tasks = data ? JSON.parse(data) : [];
+      const filteredTasks = tasks.filter((t) => t.id !== taskId);
+
+      fs.writeFile(FILE_PATH, JSON.stringify(filteredTasks, null, 2), "utf8", (err) => {
+        if (err) {
+          res.writeHead(500);
+          res.end("Failed to delete task");
+        } else {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ message: "Task deleted" }));
+        }
+      });
+    });
+  }
+
+  if (req.method === "DELETE" && req.url === "/tasks") {
+    fs.writeFile(FILE_PATH, "[]", "utf8", (err) => {
+      if (err) {
+        res.writeHead(500);
+        res.end("Failed to delete all tasks");
+      } else {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "All tasks deleted" }));
       }
     });
   }

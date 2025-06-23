@@ -1,25 +1,29 @@
 <template>
   <div class="home-page__card">
     <h2 class="home-page__card-title">Get Things Done!</h2>
+
     <div class="home-page__card-button-wrapper">
       <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
     </div>
-    <div class="home-page__card-task-scroll">
+
+    <div class="home-page__task-scroll">
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
           <v-checkbox
-            type="checkbox"
             class="home-page__card-checkbox"
             v-model="task.completed"
             @change="taskCompleted(task)"
           />
+
           <div :class="{ completed: task.completed }">
             <div>Task: {{ task.name }}</div>
             <div>Estimate Time: {{ task.estimatedTime }}</div>
           </div>
         </div>
+
         <div class="home-page__card-edit-delete-svg">
           <svg
+            @click="handleEdit(task)"
             xmlns="http://www.w3.org/2000/svg"
             class="home-page__card-icon"
             height="20"
@@ -32,6 +36,7 @@
             />
           </svg>
           <svg
+            @click="deleteTask(task.id)"
             xmlns="http://www.w3.org/2000/svg"
             class="home-page__card-icon"
             height="20"
@@ -46,20 +51,23 @@
         </div>
       </div>
     </div>
+
     <div class="home-page__card-button-wrapper mt-6">
-      <v-btn class="home-page__card-delete-button">Delete All</v-btn>
+      <v-btn class="home-page__card-delete-button" @click="deleteAllTasks()">Delete All</v-btn>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
-import Task from "../type/home";
 import { useTaskStore } from "@/stores/task";
+import type { Task } from "@/type/home";
 
 const tasks = ref<Task[]>([]);
 const taskStore = useTaskStore();
+const router = useRouter();
 
 onMounted(async () => {
   const res = await fetch("http://localhost:3000/tasks");
@@ -67,8 +75,35 @@ onMounted(async () => {
   tasks.value = data.reverse();
 });
 
+const handleEdit = (task: Task) => {
+  taskStore.taskToEdit = task;
+  router.push("/edit");
+};
+
 const taskCompleted = async (task: Task) => {
   await taskStore.updateCompleted(task);
+};
+
+const deleteTask = async (taskId: string) => {
+  try {
+    await fetch(`http://localhost:3000/tasks/${taskId}`, {
+      method: "DELETE",
+    });
+    tasks.value = tasks.value.filter((t) => t.id !== taskId);
+  } catch (error: any) {
+    console.error("Failed to delete task:", error.message);
+  }
+};
+
+const deleteAllTasks = async () => {
+  try {
+    await fetch("http://localhost:3000/tasks", {
+      method: "DELETE",
+    });
+    tasks.value = [];
+  } catch (error: any) {
+    console.error("Failed to delete all tasks:", error.message);
+  }
 };
 </script>
 
@@ -78,7 +113,7 @@ const taskCompleted = async (task: Task) => {
   padding: 24px;
   border-radius: 16px;
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
 
   &-title {
     text-align: center;
@@ -97,13 +132,6 @@ const taskCompleted = async (task: Task) => {
     color: white;
     font-size: 16px;
     text-decoration: none;
-  }
-
-  &-task-scroll {
-    max-height: 320px;
-    overflow-y: auto;
-    margin-bottom: 24px;
-    scrollbar-width: none;
   }
 
   &-items {
@@ -144,6 +172,14 @@ const taskCompleted = async (task: Task) => {
     font-size: 14px;
   }
 }
+
+.home-page__task-scroll {
+  max-height: 320px;
+  overflow-y: auto;
+  margin-bottom: 24px;
+  scrollbar-width: none;
+}
+
 .completed {
   text-decoration: line-through;
 }
@@ -151,7 +187,6 @@ const taskCompleted = async (task: Task) => {
 ::v-deep(.v-input__details) {
   grid-area: unset !important;
 }
-
 ::v-deep(.v-checkbox .v-selection-control) {
   min-height: unset !important;
 }
