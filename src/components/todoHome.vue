@@ -4,43 +4,46 @@
     <div class="home-page__card-button-wrapper">
       <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
     </div>
-    <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
-      <div class="home-page__card-contents">
-        <v-checkbox
-          type="checkbox"
-          class="home-page__card-checkbox"
-          v-model="task.completed"
-          @change="taskCompleted(task)"
-        />
-        <span :class="{ completed: task.completed }"
-          >{{ task.name }} | {{ task.estimatedTime }}</span
-        >
-      </div>
-      <div class="home-page__card-edit-delete-svg">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="home-page__card-icon"
-          height="20"
-          width="20"
-          viewBox="0 0 24 24"
-          fill="white"
-        >
-          <path
-            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41L18.37 3.29a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+    <div class="home-page__card-task-scroll">
+      <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
+        <div class="home-page__card-contents">
+          <v-checkbox
+            type="checkbox"
+            class="home-page__card-checkbox"
+            v-model="task.completed"
+            @change="taskCompleted(task)"
           />
-        </svg>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="home-page__card-icon"
-          height="20"
-          width="20"
-          viewBox="0 0 24 24"
-          fill="white"
-        >
-          <path
-            d="M16 9v10H8V9h8m-1.5-6H9.5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"
-          />
-        </svg>
+          <div :class="{ completed: task.completed }">
+            <div>Task: {{ task.name }}</div>
+            <div>Estimate Time: {{ task.estimatedTime }}</div>
+          </div>
+        </div>
+        <div class="home-page__card-edit-delete-svg">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="home-page__card-icon"
+            height="20"
+            width="20"
+            viewBox="0 0 24 24"
+            fill="white"
+          >
+            <path
+              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41L18.37 3.29a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+            />
+          </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="home-page__card-icon"
+            height="20"
+            width="20"
+            viewBox="0 0 24 24"
+            fill="white"
+          >
+            <path
+              d="M16 9v10H8V9h8m-1.5-6H9.5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"
+            />
+          </svg>
+        </div>
       </div>
     </div>
     <div class="home-page__card-button-wrapper mt-6">
@@ -53,6 +56,7 @@
 import { ref, onMounted } from "vue";
 
 import Task from "../type/home";
+import { useTaskStore } from "@/stores/task";
 
 const tasks = ref<Task[]>([]);
 const taskStore = useTaskStore();
@@ -92,6 +96,13 @@ const taskCompleted = async (task: Task) => {
     color: white;
     font-size: 16px;
     text-decoration: none;
+  }
+
+  &-task-scroll {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 24px;
+    scrollbar-width: none;
   }
 
   &-items {
