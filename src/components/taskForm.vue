@@ -1,12 +1,12 @@
 <template>
   <div class="task-form-page__card">
     <h2 class="task-form-page__card-title">{{ title }}</h2>
-    <v-form @submit.prevent="onSubmit" ref="formRef">
+    <v-form @submit.prevent="onSubmit" ref="formRef" autocomplete="off">
       <div class="task-form-page__card-input">
         <label for="task">Task:</label>
         <input
           id="task"
-          v-model="localTask"
+          v-model="task"
           type="text"
           class="task-form-page__card-custom-input"
           required
@@ -16,7 +16,7 @@
         <label for="estimatedTime">Estimate Time:</label>
         <input
           id="estimatedTime"
-          v-model="localEstimatedTime"
+          v-model="taskEstimatedTime"
           type="text"
           class="task-form-page__card-custom-input"
           required
@@ -33,6 +33,7 @@
         <v-btn
           class="task-form-page__card-custom-button task-form-page__card-save-button"
           type="submit"
+          :disabled="props.isEdit && !isModified"
         >
           Save
         </v-btn>
@@ -42,12 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import type { Task } from "@/type/home";
 
 const props = defineProps<{
   title: string;
   taskData?: Task | null;
+  isEdit?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -55,24 +57,33 @@ const emit = defineEmits<{
   (e: "cancel"): void;
 }>();
 
-const localTask = ref<string>(props.taskData?.name || "");
-const localEstimatedTime = ref<string>(props.taskData?.estimatedTime || "");
+const task = ref<string>(props.taskData?.name || "");
+const taskEstimatedTime = ref<string>(props.taskData?.estimatedTime || "");
+
+const actualName = ref(props.taskData?.name || "");
+const actualTime = ref(props.taskData?.estimatedTime || "");
 
 watch(
   () => props.taskData,
   (task) => {
     if (task) {
-      localTask.value = task.name;
-      localEstimatedTime.value = task.estimatedTime;
+      task.value = task.name;
+      taskEstimatedTime.value = task.estimatedTime;
+      actualName.value = task.name;
+      actualTime.value = task.estimatedTime;
     }
   },
   { immediate: true }
 );
 
+const isModified = computed(() => {
+  return task.value !== actualName.value || taskEstimatedTime.value !== actualTime.value;
+});
+
 const onSubmit = () => {
   emit("save", {
-    name: localTask.value,
-    estimatedTime: localEstimatedTime.value,
+    name: task.value,
+    estimatedTime: taskEstimatedTime.value,
   });
 };
 

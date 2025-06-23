@@ -2,6 +2,7 @@
   <TaskForm
     title="Edit Task!"
     :taskData="taskStore.taskToEdit"
+    :isEdit="true"
     @save="editSaveForm"
     @cancel="navigateCancelForm"
   />
