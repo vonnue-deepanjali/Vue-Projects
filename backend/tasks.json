@@ -1,38 +1,32 @@
 [
   {
-    "id": "1750512051031-homeworks",
+    "id": "1750660505772-coding",
+    "name": "codings",
+    "estimatedTime": "2 hours",
+    "completed": false
+  },
+  {
+    "id": "1750660539335-homework",
     "name": "home work",
-    "estimatedTime": "7 mins",
+    "estimatedTime": "20 mins",
     "completed": false
   },
   {
-    "id": "1750512276018-coding",
-    "name": "coding vue.js",
-    "estimatedTime": "7 min",
-    "completed": false
-  },
-  {
-    "id": "1750513778861-lunch",
-    "name": "lunchee",
-    "estimatedTime": "6 mins",
-    "completed": false
-  },
-  {
-    "id": "1750514687771-coding",
-    "name": "coding vue.js",
-    "estimatedTime": "7 min",
-    "completed": false
-  },
-  {
-    "id": "1750651917844-homeworks",
-    "name": "home work",
-    "estimatedTime": "6 mins",
-    "completed": false
-  },
-  {
-    "id": "1750655955546-lunch",
+    "id": "1750660556245-lunch",
     "name": "lunch",
-    "estimatedTime": "6 mins",
+    "estimatedTime": "15 min",
+    "completed": false
+  },
+  {
+    "id": "1750660591858-codingvue.js",
+    "name": "coding vue.js",
+    "estimatedTime": "3 hours",
+    "completed": false
+  },
+  {
+    "id": "1750660626664-playcards",
+    "name": "play cardse",
+    "estimatedTime": "15 mins",
     "completed": false
   }
 ]
