@@ -62,8 +62,9 @@ const tasks = ref<Task[]>([]);
 const taskStore = useTaskStore();
 
 onMounted(async () => {
-  const res = await fetch("http://localhost:7000/tasks");
-  tasks.value = await res.json();
+  const res = await fetch("http://localhost:3000/tasks");
+  const data = await res.json();
+  tasks.value = data.reverse();
 });
 
 const taskCompleted = async (task: Task) => {
