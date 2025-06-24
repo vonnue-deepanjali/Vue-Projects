@@ -17,7 +17,7 @@
 
           <div :class="{ completed: task.completed }">
             <v-tooltip location="top">
-              <template v-slot:activator="{ props }">
+              <template #activator="{ props }">
                 <div class="home-page__task-name" v-bind="props">Task: {{ task.name }}</div>
               </template>
               <span class="tooltip-text">Task: {{ task.name }}</span>
@@ -197,7 +197,7 @@ const deleteAllTasks = async () => {
 }
 
 .tooltip-text {
-  max-width: 400px; 
+  max-width: 400px;
   white-space: normal;
   word-wrap: break-word;
   display: inline-block;
