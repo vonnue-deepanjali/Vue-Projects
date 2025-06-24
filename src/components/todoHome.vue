@@ -16,7 +16,12 @@
           />
 
           <div :class="{ completed: task.completed }">
-            <div>Task: {{ task.name }}</div>
+            <v-tooltip location="top">
+              <template v-slot:activator="{ props }">
+                <div class="home-page__task-name" v-bind="props">Task: {{ task.name }}</div>
+              </template>
+              <span class="tooltip-text">Task: {{ task.name }}</span>
+            </v-tooltip>
             <div>Estimate Time: {{ task.estimatedTime }}</div>
           </div>
         </div>
@@ -84,14 +89,12 @@ const taskCompleted = async (task: Task) => {
   await taskStore.updateCompleted(task);
 };
 
-
-
 const deleteTask = async (taskId: string) => {
   try {
     await fetch(`http://localhost:3000/tasks/${taskId}`, {
       method: "DELETE",
     });
-    tasks.value = tasks.value.filter((t) => t.id !== taskId); // Update local state
+    tasks.value = tasks.value.filter((t) => t.id !== taskId);
   } catch (error: any) {
     console.error("Failed to delete task:", error.message);
   }
@@ -102,7 +105,7 @@ const deleteAllTasks = async () => {
     await fetch("http://localhost:3000/tasks", {
       method: "DELETE",
     });
-    tasks.value = []; // Clear all tasks in frontend
+    tasks.value = [];
   } catch (error: any) {
     console.error("Failed to delete all tasks:", error.message);
   }
@@ -184,6 +187,20 @@ const deleteAllTasks = async () => {
 
 .completed {
   text-decoration: line-through;
+}
+
+.home-page__task-name {
+  max-width: 180px; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tooltip-text {
+  max-width: 400px; 
+  white-space: normal;
+  word-wrap: break-word;
+  display: inline-block;
 }
 
 ::v-deep(.v-input__details) {
