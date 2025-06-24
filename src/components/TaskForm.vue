@@ -34,7 +34,7 @@
         <v-btn
           class="task-form-page__card-custom-button task-form-page__card-save-button"
           type="submit"
-           :disabled="props.isEdit && !isModified"
+          :disabled="props.isEdit && !isModified"
         >
           Save
         </v-btn>
@@ -79,10 +79,7 @@ watch(
 );
 
 const isModified = computed(() => {
-  return (
-    task.value !== actualName.value ||
-    taskEstimatedTime.value !== actualTime.value
-  );
+  return task.value !== actualName.value || taskEstimatedTime.value !== actualTime.value;
 });
 
 const onSubmit = () => {
@@ -93,7 +90,6 @@ const onSubmit = () => {
 };
 
 const onCancel = () => emit("cancel");
-
 </script>
 
 <style lang="scss" scoped>
@@ -101,7 +97,7 @@ const onCancel = () => emit("cancel");
   background-color: #1e1e2f;
   padding: 24px;
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
   color: white;
   border-radius: 16px;
 

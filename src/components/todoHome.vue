@@ -6,7 +6,7 @@
       <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
     </div>
 
-    <div class="home-page__task-scroll">
+    <div class="home-page__card-task-scroll">
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
           <v-checkbox
@@ -18,9 +18,9 @@
           <div :class="{ completed: task.completed }">
             <v-tooltip location="top">
               <template #activator="{ props }">
-                <div class="home-page__task-name" v-bind="props">Task: {{ task.name }}</div>
+                <div class="home-page__card-task-name" v-bind="props">Task: {{ task.name }}</div>
               </template>
-              <span class="tooltip-text">Task: {{ task.name }}</span>
+              <span class="home-page__card-tooltip-text">Task: {{ task.name }}</span>
             </v-tooltip>
             <div>Estimate Time: {{ task.estimatedTime }}</div>
           </div>
@@ -176,31 +176,31 @@ const deleteAllTasks = async () => {
     border-radius: 8px;
     font-size: 14px;
   }
-}
 
-.home-page__task-scroll {
-  max-height: 320px;
-  overflow-y: auto;
-  margin-bottom: 24px;
-  scrollbar-width: none;
+  &-task-scroll {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 24px;
+    scrollbar-width: none;
+  }
+
+  &-task-name {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-tooltip-text {
+    max-width: 400px;
+    white-space: normal;
+    word-wrap: break-word;
+    display: inline-block;
+  }
 }
 
 .completed {
   text-decoration: line-through;
-}
-
-.home-page__task-name {
-  max-width: 400px; 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.tooltip-text {
-  max-width: 400px;
-  white-space: normal;
-  word-wrap: break-word;
-  display: inline-block;
 }
 
 ::v-deep(.v-input__details) {

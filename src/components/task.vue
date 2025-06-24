@@ -1,57 +1,68 @@
 <template>
-  <TaskForm
-    title="Add New Task!"
-    @save="saveForm"
-    @cancel="cancelForm"
-  />
+  <TaskForm :title="'Add Task'" @save="saveForm" @cancel="cancelForm" />
+
+  <v-snackbar v-model="snackbar.show" :color="snackbar.color" :timeout="10000">
+    {{ snackbar.message }}
+    <template v-slot:actions>
+      <v-btn text @click="snackbar.show = false">Close</v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
-
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import TaskForm from './TaskForm.vue';
-import type TaskData from '@/type/task';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import TaskForm from "./TaskForm.vue";
+import type TaskData from "@/type/task";
 
 const router = useRouter();
 
-const task = ref<string>('');
-const estimatedTime = ref<string>('');
+const snackbar = ref({
+  show: false,
+  message: "",
+  color: "success",
+});
 
-
-const cancelForm = (): void => {
-  task.value = '';
-  estimatedTime.value = '';
-  router.push('/');
+const cancelForm = () => {
+  router.push("/");
 };
 
-const saveForm = async (data: { task: string; estimatedTime: string }): Promise<void> => {
+const saveForm = async (data: { name: string; estimatedTime: string }) => {
   const taskData: TaskData = {
     name: data.name,
     estimatedTime: data.estimatedTime,
   };
 
   try {
-    const res = await fetch('http://localhost:3000/tasks', {
-      method: 'POST',
+    const res = await fetch("http://localhost:3000/tasks", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(taskData),
     });
 
     if (res.ok) {
-      alert('Task saved successfully');
-      router.push('/');
-      cancelForm();
+      snackbar.value = {
+        show: true,
+        message: "Task saved successfully!",
+        color: "success",
+      };
+      setTimeout(() => router.push("/"), 1000);
     } else {
       const error = await res.json();
-      alert(error.message || 'Failed to save task');
+      snackbar.value = {
+        show: true,
+        message: error.message || "Failed to save task",
+        color: "error",
+      };
     }
   } catch (error: any) {
-    alert(`Error saving task: ${error.message}`);
+    snackbar.value = {
+      show: true,
+      message: `Error: ${error.message}`,
+      color: "error",
+    };
   }
 };
 </script>
-
-
