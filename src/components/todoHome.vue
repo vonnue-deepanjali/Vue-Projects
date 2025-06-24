@@ -190,7 +190,7 @@ const deleteAllTasks = async () => {
 }
 
 .home-page__task-name {
-  max-width: 180px; 
+  max-width: 400px; 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
