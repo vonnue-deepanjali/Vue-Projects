@@ -6,7 +6,7 @@
       <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
     </div>
 
-    <div class="home-page__task-scroll">
+    <div class="home-page__card-task-scroll">
       <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
           <v-checkbox
@@ -16,7 +16,12 @@
           />
 
           <div :class="{ completed: task.completed }">
-            <div>Task: {{ task.name }}</div>
+            <v-tooltip location="top">
+              <template v-slot:activator="{ props }">
+                <div class="home-page__card-task-name" v-bind="props">Task: {{ task.name }}</div>
+              </template>
+              <span class="home-page__card-tooltip-text">Task: {{ task.name }}</span>
+            </v-tooltip>
             <div>Estimate Time: {{ task.estimatedTime }}</div>
           </div>
         </div>
@@ -134,6 +139,12 @@ const deleteAllTasks = async () => {
     text-decoration: none;
   }
 
+  &-task-scroll {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 24px;
+    scrollbar-width: none;
+  }
   &-items {
     background-color: #a259ff;
     color: white;
@@ -154,6 +165,19 @@ const deleteAllTasks = async () => {
     margin-right: 12px;
   }
 
+  &-task-name {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-tooltip-text {
+    max-width: 400px;
+    white-space: normal;
+    word-wrap: break-word;
+    display: inline-block;
+  }
   &-edit-delete-svg {
     display: flex;
   }
@@ -171,13 +195,6 @@ const deleteAllTasks = async () => {
     border-radius: 8px;
     font-size: 14px;
   }
-}
-
-.home-page__task-scroll {
-  max-height: 320px;
-  overflow-y: auto;
-  margin-bottom: 24px;
-  scrollbar-width: none;
 }
 
 .completed {
