@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import type { Task } from "@/type/home";
 
 const props = defineProps<{
@@ -57,11 +57,14 @@ const emit = defineEmits<{
   (e: "cancel"): void;
 }>();
 
-const task = ref<string>(props.taskData?.name || "");
-const taskEstimatedTime = ref<string>(props.taskData?.estimatedTime || "");
+const task = ref<string>("");
+const taskEstimatedTime = ref<string>("");
+const actualName = ref<string>("");
+const actualTime = ref<string>("");
 
-const actualName = ref(props.taskData?.name || "");
-const actualTime = ref(props.taskData?.estimatedTime || "");
+const isModified = computed(() => {
+  return task.value !== actualName.value || taskEstimatedTime.value !== actualTime.value;
+});
 
 watch(
   () => props.taskData,
@@ -76,10 +79,6 @@ watch(
   { immediate: true }
 );
 
-const isModified = computed(() => {
-  return task.value !== actualName.value || taskEstimatedTime.value !== actualTime.value;
-});
-
 const onSubmit = () => {
   emit("save", {
     name: task.value,
@@ -88,6 +87,15 @@ const onSubmit = () => {
 };
 
 const onCancel = () => emit("cancel");
+
+onMounted(() => {
+  if (props.taskData) {
+    task.value = props.taskData.name;
+    taskEstimatedTime.value = props.taskData.estimatedTime;
+    actualName.value = props.taskData.name;
+    actualTime.value = props.taskData.estimatedTime;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
