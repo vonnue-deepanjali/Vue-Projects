@@ -12,7 +12,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-
 import TaskForm from "./TaskForm.vue";
 import type TaskData from "@/type/task";
 
@@ -23,10 +22,6 @@ const snackbar = ref({
   message: "",
   color: "success",
 });
-
-const cancelForm = () => {
-  router.push("/");
-};
 
 const saveForm = async (data: { name: string; estimatedTime: string }) => {
   const taskData: TaskData = {
@@ -65,5 +60,9 @@ const saveForm = async (data: { name: string; estimatedTime: string }) => {
       color: "error",
     };
   }
+};
+
+const cancelForm = () => {
+  router.push("/");
 };
 </script>
