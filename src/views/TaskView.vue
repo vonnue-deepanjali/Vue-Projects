@@ -1,7 +1,7 @@
 <template>
-  <task />
+  <addTask />
 </template>
 
-<script setup>
-import task from "../components/task.vue";
+<script lang='ts' setup>
+import addTask from "../components/addTask.vue";
 </script>
