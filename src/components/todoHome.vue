@@ -172,6 +172,12 @@ const deleteAllTasks = async () => {
     white-space: nowrap;
   }
 
+  @media only screen and (max-width: 600px) {
+    &-task-name {
+      max-width: 142px !important;
+    }
+  }
+
   &-tooltip-text {
     max-width: 400px;
     white-space: normal;
