@@ -66,19 +66,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-
 import { useTaskStore } from "@/stores/task";
 import type { Task } from "@/type/home";
 
-const tasks = ref<Task[]>([]);
 const taskStore = useTaskStore();
 const router = useRouter();
-
-onMounted(async () => {
-  const res = await fetch("http://localhost:3000/tasks");
-  const data = await res.json();
-  tasks.value = data.reverse();
-});
+const tasks = ref<Task[]>([]);
 
 const handleEdit = (task: Task) => {
   taskStore.taskToEdit = task;
@@ -110,6 +103,12 @@ const deleteAllTasks = async () => {
     console.error("Failed to delete all tasks:", error.message);
   }
 };
+
+onMounted(async () => {
+  const res = await fetch("http://localhost:3000/tasks");
+  const data = await res.json();
+  tasks.value = data.reverse();
+});
 </script>
 
 <style lang="scss" scoped>
