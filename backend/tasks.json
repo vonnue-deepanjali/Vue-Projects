@@ -1,44 +1,14 @@
 [
   {
-    "id": "1750747929545-playcards",
-    "name": "Play cards",
+    "id": "1750824063912-jhjuy",
+    "name": "jhjuy",
+    "estimatedTime": "987",
+    "completed": false
+  },
+  {
+    "id": "1750824120457-oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+    "name": "oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
     "estimatedTime": "9",
-    "completed": false
-  },
-  {
-    "id": "1750747990593-lunch",
-    "name": "lunch",
-    "estimatedTime": "8",
-    "completed": false
-  },
-  {
-    "id": "1750748019252-homework",
-    "name": "home work",
-    "estimatedTime": "20 mins",
-    "completed": false
-  },
-  {
-    "id": "1750748057014-codingvue.js",
-    "name": "coding vue.js",
-    "estimatedTime": "29 mins",
-    "completed": false
-  },
-  {
-    "id": "1750748096110-playchess",
-    "name": "play chess",
-    "estimatedTime": "4 hours",
-    "completed": false
-  },
-  {
-    "id": "1750748182955-ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
-    "name": "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo0oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
-    "estimatedTime": "1 min",
-    "completed": false
-  },
-  {
-    "id": "1750753534475-playgame",
-    "name": "Play Games",
-    "estimatedTime": "30 mins",
     "completed": false
   }
 ]
