@@ -20,15 +20,16 @@ import { ref } from vue
 import { useRouter } from "vue-router";
 import { useTaskStore } from "@/stores/task";
 import TaskForm from "./TaskForm.vue";
+import type { Snackbar } from '@/type/snackbar';
 
 const taskStore = useTaskStore();
 const router = useRouter();
 
-const snackbar = ref({
+const snackbar = ref<Snackbar>({
   show: false,
   message: '',
-  color: 'success'
-})
+  color: 'success',
+});
 
 const editSaveForm = async (task: { name: string; estimatedTime: string }) => {
   const id = taskStore.taskToEdit?.id;
