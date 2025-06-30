@@ -74,11 +74,27 @@ const tasks = ref<Task[]>([]);
 const taskStore = useTaskStore();
 const router = useRouter();
 
+// onMounted(async () => {
+//   const res = await fetch("http://localhost:3000/tasks");
+//   const data = await res.json();
+//   tasks.value = data.reverse();
+// });
+
 onMounted(async () => {
-  const res = await fetch("http://localhost:3000/tasks");
-  const data = await res.json();
-  tasks.value = data.reverse();
+  try {
+    const res = await fetch("http://localhost:3000/tasks");
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch tasks: HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    tasks.value = data.reverse();
+  } catch (error: any) {
+    console.error("Error fetching tasks:", error.message);
+  }
 });
+
 
 const handleEdit = (task: Task) => {
   taskStore.taskToEdit = task;
