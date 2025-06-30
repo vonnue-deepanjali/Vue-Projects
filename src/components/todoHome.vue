@@ -126,8 +126,8 @@ onMounted(async () => {
   }
 
   &-button-wrapper {
-    display: flex;
-    justify-content: center;
+    width: 130px;
+    margin-inline: auto;
     margin-bottom: 24px;
   }
 
