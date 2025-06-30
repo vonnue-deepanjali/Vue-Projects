@@ -1,5 +1,5 @@
 <template>
-  <TaskForm title="Add New Task!" @save="saveForm" @cancel="cancelForm" />
+  <TaskForm title="Add New Task!" @save="onSave" @cancel="cancelForm" />
 
   <v-snackbar v-model="snackbar.show" :color="snackbar.color" :timeout="3000">
     {{ snackbar.message }}
@@ -14,10 +14,11 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import TaskForm from "./TaskForm.vue";
 import type TaskData from "@/type/task";
+import type { Snackbar } from "@/type/snackbar";
 
 const router = useRouter();
 
-const snackbar = ref({
+const snackbar = ref<Snackbar>({
   show: false,
   message: "",
   color: "success",
@@ -38,25 +39,27 @@ const saveForm = async (data: { name: string; estimatedTime: string }) => {
       body: JSON.stringify(taskData),
     });
 
-    if (res.ok) {
-      snackbar.value = {
-        show: true,
-        message: "Task saved successfully!",
-        color: "success",
-      };
-      setTimeout(() => router.push("/"), 1000);
-    } else {
-      const error = await res.json();
-      snackbar.value = {
-        show: true,
-        message: error.message || "Failed to save task",
-        color: "error",
-      };
-    }
-  } catch (error: any) {
+    return res.ok;
+  } catch (error) {
+    console.error("Error saving task:", error);
+    return false;
+  }
+};
+
+const onSave = async (data: { name: string; estimatedTime: string }) => {
+  const isSuccess = await saveForm(data);
+
+  if (isSuccess) {
     snackbar.value = {
       show: true,
-      message: `Error: ${error.message}`,
+      message: "Task saved successfully!",
+      color: "success",
+    };
+    setTimeout(() => router.push("/"), 1000);
+  } else {
+    snackbar.value = {
+      show: true,
+      message: "Failed to save task",
       color: "error",
     };
   }
