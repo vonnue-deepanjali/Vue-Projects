@@ -7,7 +7,7 @@
     </div>
 
     <div class="home-page__card-task-scroll">
-      <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
+      <div v-for="task in taskStore.tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
           <v-checkbox
             class="home-page__card-checkbox"
@@ -80,21 +80,24 @@ const router = useRouter();
 //   tasks.value = data.reverse();
 // });
 
-onMounted(async () => {
-  try {
-    const res = await fetch("http://localhost:3000/tasks");
+// onMounted(async () => {
+//   try {
+//     const res = await fetch("http://localhost:3000/tasks");
 
-    if (!res.ok) {
-      throw new Error(`Failed to fetch tasks: HTTP ${res.status}`);
-    }
+//     if (!res.ok) {
+//       throw new Error(`Failed to fetch tasks: HTTP ${res.status}`);
+//     }
 
-    const data = await res.json();
-    tasks.value = data.reverse();
-  } catch (error: any) {
-    console.error("Error fetching tasks:", error.message);
-  }
-});
+//     const data = await res.json();
+//     tasks.value = data.reverse();
+//   } catch (error: any) {
+//     console.error("Error fetching tasks:", error.message);
+//   }
+// });
 
+onMounted(() => {
+  taskStore.fetchTasks()
+})
 
 const handleEdit = (task: Task) => {
   taskStore.taskToEdit = task;
@@ -104,28 +107,17 @@ const handleEdit = (task: Task) => {
 const taskCompleted = async (task: Task) => {
   await taskStore.updateCompleted(task);
 };
-
 const deleteTask = async (taskId: string) => {
-  try {
-    await fetch(`http://localhost:3000/tasks/${taskId}`, {
-      method: "DELETE",
-    });
-    tasks.value = tasks.value.filter((t) => t.id !== taskId);
-  } catch (error: any) {
-    console.error("Failed to delete task:", error.message);
-  }
+  await taskStore.deleteTask(taskId);
 };
 
 const deleteAllTasks = async () => {
-  try {
-    await fetch("http://localhost:3000/tasks", {
-      method: "DELETE",
-    });
-    tasks.value = [];
-  } catch (error: any) {
-    console.error("Failed to delete all tasks:", error.message);
-  }
+  
+    await taskStore.deleteAllTasks();
+  
 };
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -233,3 +225,6 @@ const deleteAllTasks = async () => {
   min-height: unset !important;
 }
 </style>
+
+
+
