@@ -1,6 +1,5 @@
 <template>
-  <TaskForm title="Add New Task!" @save="onSave" @cancel="cancelForm" />
-
+  <TaskForm title="Add New Task!" @save="saveForm" @cancel="cancelForm" />
   <v-snackbar v-model="snackbar.show" :color="snackbar.color" :timeout="3000">
     {{ snackbar.message }}
     <template v-slot:actions>
@@ -13,10 +12,11 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import TaskForm from "./TaskForm.vue";
-import type TaskData from "@/type/task";
+import { useTaskStore } from "@/stores/task";
 import type { Snackbar } from "@/type/snackbar";
 
 const router = useRouter();
+const taskStore = useTaskStore();
 
 const snackbar = ref<Snackbar>({
   show: false,
@@ -25,29 +25,7 @@ const snackbar = ref<Snackbar>({
 });
 
 const saveForm = async (data: { name: string; estimatedTime: string }) => {
-  const taskData: TaskData = {
-    name: data.name,
-    estimatedTime: data.estimatedTime,
-  };
-
-  try {
-    const res = await fetch("http://localhost:3000/tasks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(taskData),
-    });
-
-    return res.ok;
-  } catch (error) {
-    console.error("Error saving task:", error);
-    return false;
-  }
-};
-
-const onSave = async (data: { name: string; estimatedTime: string }) => {
-  const isSuccess = await saveForm(data);
+  const isSuccess = await taskStore.addTask(data);
 
   if (isSuccess) {
     snackbar.value = {
