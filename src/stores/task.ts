@@ -6,6 +6,7 @@ export const useTaskStore = defineStore('task', () => {
   const taskToEdit = ref<Task | null>(null)
   const tasks = ref<Task[]>([])
 
+  // ✅ Fetch all tasks
   const fetchTasks = async () => {
     try {
       const res = await fetch("http://localhost:3000/tasks")
@@ -21,6 +22,40 @@ export const useTaskStore = defineStore('task', () => {
     }
   }
 
+  // ✅ Add a new task
+  const addTask = async (data: { name: string; estimatedTime: string }) => {
+    const taskData = {
+      name: data.name,
+      estimatedTime: data.estimatedTime,
+      completed: false, // default for new tasks
+    };
+
+    try {
+      const res = await fetch("http://localhost:3000/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskData),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to add task: HTTP ${res.status}`);
+      }
+
+      const createdTask = await res.json();
+
+      // Add new task at the top for instant reactivity
+      tasks.value = [createdTask, ...tasks.value];
+
+      return true;
+    } catch (error: any) {
+      console.error("Error adding task:", error.message);
+      return false;
+    }
+  };
+
+  // ✅ Update a task's name and estimated time
   const updateTask = async (id: string, params: { name: string; estimatedTime: string }) => {
     try {
       const response = await fetch(`http://localhost:3000/tasks/${id}`, {
@@ -30,24 +65,22 @@ export const useTaskStore = defineStore('task', () => {
           name: params.name,
           estimatedTime: params.estimatedTime,
         }),
-      })
+      });
 
       if (!response.ok) {
-        console.error(`Failed with status: ${response.status}`)
-        return false
+        console.error(`Failed with status: ${response.status}`);
       }
 
-      const data = await response.json()
-      console.log("Updated task:", data)
+      const data = await response.json();
+      console.log("Updated task:", data);
 
-      await fetchTasks()
-      return true
+      await fetchTasks();
     } catch (error) {
-      console.error("Error updating task:", error)
-      return false
+      console.error("Error updating task:", error);
     }
-  }
+  };
 
+  // ✅ Toggle task completion
   const updateCompleted = async (task: Task) => {
     try {
       const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
@@ -56,18 +89,19 @@ export const useTaskStore = defineStore('task', () => {
         body: JSON.stringify({
           completed: task.completed,
         }),
-      })
+      });
 
       if (!response.ok) {
-        console.error(`Failed to update completion status with status: ${response.status}`)
+        console.error(`Failed to update completion status with status: ${response.status}`);
       } else {
-        await fetchTasks()
+        await fetchTasks();
       }
     } catch (error: any) {
-      console.error("Failed to update completion status:", error.message)
+      console.error("Failed to update completion status:", error.message);
     }
-  }
+  };
 
+  // ✅ Delete a single task
   const deleteTask = async (taskId: string) => {
     try {
       const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
@@ -84,6 +118,7 @@ export const useTaskStore = defineStore('task', () => {
     }
   };
 
+  // ✅ Delete all tasks
   const deleteAllTasks = async () => {
     try {
       const response = await fetch("http://localhost:3000/tasks", {
@@ -104,9 +139,10 @@ export const useTaskStore = defineStore('task', () => {
     taskToEdit,
     tasks,
     fetchTasks,
+    addTask,
     updateTask,
     updateCompleted,
-    deleteTask,          
-    deleteAllTasks,      
-  }
-})
+    deleteTask,
+    deleteAllTasks,
+  };
+});
