@@ -1,24 +1,30 @@
 <template>
-  <div class="home-page">
-    <div class="home-page__card">
-      <h2 class="home-page__card-title">Get Things Done!</h2>
-      <div class="home-page__card-button-wrapper">
-        <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
-      </div>
-      <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
+  <div class="home-page__card">
+    <h2 class="home-page__card-title">Get Things Done!</h2>
+    <div class="home-page__card-button-wrapper">
+      <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
+    </div>
+    <div class="home-page__card-task-scroll">
+      <div v-for="task in taskStore.tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
           <v-checkbox
-            type="checkbox"
             class="home-page__card-checkbox"
             v-model="task.completed"
-            @change="updateCompleted(task)"
+            @change="taskCompleted(task)"
           />
-          <span :class="{ completed: task.completed }"
-            >{{ task.name }} | {{ task.estimatedTime }}</span
-          >
+          <div :class="{ completed: task.completed }">
+            <v-tooltip location="top">
+              <template v-slot:activator="{ props }">
+                <div class="home-page__card-task-name" v-bind="props">Task: {{ task.name }}</div>
+              </template>
+              <span class="home-page__card-tooltip-text">Task: {{ task.name }}</span>
+            </v-tooltip>
+            <div>Estimate Time: {{ task.estimatedTime }}</div>
+          </div>
         </div>
         <div class="home-page__card-edit-delete-svg">
           <svg
+            @click="handleEdit(task)"
             xmlns="http://www.w3.org/2000/svg"
             class="home-page__card-icon"
             height="20"
@@ -31,6 +37,7 @@
             />
           </svg>
           <svg
+            @click="deleteTask(task.id)"
             xmlns="http://www.w3.org/2000/svg"
             class="home-page__card-icon"
             height="20"
@@ -44,121 +51,144 @@
           </svg>
         </div>
       </div>
-      <div class="home-page__card-button-wrapper mt-6">
-        <v-btn class="home-page__card-delete-button">Delete All</v-btn>
-      </div>
+    </div>
+    <div class="home-page__card-button-wrapper">
+      <v-btn class="home-page__card-delete-button" @click="deleteAllTasks()">Delete All</v-btn>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import Task from "../type/home";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useTaskStore } from "@/stores/task";
+import type { Task } from "@/type/home";
 
-const tasks = ref<Task[]>([]);
+const taskStore = useTaskStore();
+const router = useRouter();
 
-onMounted(async () => {
-  const res = await fetch("http://localhost:7000/tasks");
-  tasks.value = await res.json();
-});
-
-const updateCompleted = async (task: Task) => {
-  try {
-    await fetch(`http://localhost:7000/tasks/${task.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(task),
-    });
-  } catch (error: any) {
-    console.error("Failed to update completion status:", error.message);
-  }
+const handleEdit = (task: Task) => {
+  taskStore.taskToEdit = task;
+  router.push("/edit");
 };
+
+const taskCompleted = async (task: Task) => {
+  await taskStore.updateCompleted(task);
+};
+
+const deleteTask = async (taskId: string) => {
+  await taskStore.deleteTask(taskId);
+};
+
+const deleteAllTasks = async () => {
+  await taskStore.deleteAllTasks();
+};
+
+onMounted(() => {
+  taskStore.fetchTasks();
+});
 </script>
 
 <style lang="scss" scoped>
-.home-page {
-  background-color: #a259ff;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.home-page__card {
+  background-color: #1e1e2f;
+  padding: 24px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
 
-  &__card {
-    background-color: #1e1e2f;
-    padding: 24px;
-    border-radius: 16px;
-    width: 100%;
+  &-title {
+    text-align: center;
+    color: white;
+    margin-bottom: 24px;
+  }
+
+  &-button-wrapper {
+    width: 130px;
+    margin-inline: auto;
+    margin-bottom: 24px;
+    margin-top: 24px;
+  }
+
+  &-button {
+    background-color: #a259ff;
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+  }
+
+  &-task-scroll {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 24px;
+    scrollbar-width: none;
+  }
+  &-items {
+    background-color: #a259ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+
+  &-contents {
+    display: flex;
+    align-items: center;
+  }
+
+  &-checkbox {
+    margin-right: 12px;
+  }
+
+  &-task-name {
     max-width: 400px;
-
-    &-title {
-      text-align: center;
-      color: white;
-      margin-bottom: 24px;
-    }
-
-    &-button-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
-
-    &-button {
-      background-color: #a259ff;
-      color: white;
-      font-size: 16px;
-      text-decoration: none;
-    }
-
-    &-items {
-      background-color: #a259ff;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      padding: 12px 16px;
-      border-radius: 8px;
-    }
-
-    &-contents {
-      display: flex;
-      align-items: center;
-    }
-
-    &-checkbox {
-      margin-right: 12px;
-    }
-
-    &-edit-delete-svg {
-      display: flex;
-    }
-
-    &-icon {
-      margin-left: 12px;
-      cursor: pointer;
-    }
-
-    &-delete-button {
-      background-color: #ff4d4d;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-  }
-  .completed {
-    text-decoration: line-through;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  ::v-deep(.v-input__details) {
-    grid-area: unset !important;
+  @media only screen and (max-width: 600px) {
+    &-task-name {
+      max-width: 142px !important;
+    }
   }
 
-  ::v-deep(.v-checkbox .v-selection-control) {
-    min-height: unset !important;
+  &-tooltip-text {
+    max-width: 400px;
+    white-space: normal;
+    word-wrap: break-word;
+    display: inline-block;
   }
+  &-edit-delete-svg {
+    display: flex;
+  }
+
+  &-icon {
+    margin-left: 12px;
+    cursor: pointer;
+  }
+
+  &-delete-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+}
+
+.completed {
+  text-decoration: line-through;
+}
+
+::v-deep(.v-input__details) {
+  grid-area: unset !important;
+}
+::v-deep(.v-checkbox .v-selection-control) {
+  min-height: unset !important;
 }
 </style>
