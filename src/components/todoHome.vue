@@ -1,20 +1,17 @@
 <template>
   <div class="home-page__card">
     <h2 class="home-page__card-title">Get Things Done!</h2>
-
     <div class="home-page__card-button-wrapper">
       <v-btn class="home-page__card-button" to="/task">+ New Task</v-btn>
     </div>
-
     <div class="home-page__card-task-scroll">
-      <div v-for="task in tasks" :key="task.id" class="home-page__card-items">
+      <div v-for="task in taskStore.tasks" :key="task.id" class="home-page__card-items">
         <div class="home-page__card-contents">
           <v-checkbox
             class="home-page__card-checkbox"
             v-model="task.completed"
             @change="taskCompleted(task)"
           />
-
           <div :class="{ completed: task.completed }">
             <v-tooltip location="top">
               <template v-slot:activator="{ props }">
@@ -25,7 +22,6 @@
             <div>Estimate Time: {{ task.estimatedTime }}</div>
           </div>
         </div>
-
         <div class="home-page__card-edit-delete-svg">
           <svg
             @click="handleEdit(task)"
@@ -56,22 +52,20 @@
         </div>
       </div>
     </div>
-
-    <div class="home-page__card-button-wrapper mt-6">
+    <div class="home-page__card-button-wrapper">
       <v-btn class="home-page__card-delete-button" @click="deleteAllTasks()">Delete All</v-btn>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useTaskStore } from "@/stores/task";
 import type { Task } from "@/type/home";
 
 const taskStore = useTaskStore();
 const router = useRouter();
-const tasks = ref<Task[]>([]);
 
 const handleEdit = (task: Task) => {
   taskStore.taskToEdit = task;
@@ -83,31 +77,15 @@ const taskCompleted = async (task: Task) => {
 };
 
 const deleteTask = async (taskId: string) => {
-  try {
-    await fetch(`http://localhost:3000/tasks/${taskId}`, {
-      method: "DELETE",
-    });
-    tasks.value = tasks.value.filter((t) => t.id !== taskId);
-  } catch (error: any) {
-    console.error("Failed to delete task:", error.message);
-  }
+  await taskStore.deleteTask(taskId);
 };
 
 const deleteAllTasks = async () => {
-  try {
-    await fetch("http://localhost:3000/tasks", {
-      method: "DELETE",
-    });
-    tasks.value = [];
-  } catch (error: any) {
-    console.error("Failed to delete all tasks:", error.message);
-  }
+  await taskStore.deleteAllTasks();
 };
 
-onMounted(async () => {
-  const res = await fetch("http://localhost:3000/tasks");
-  const data = await res.json();
-  tasks.value = data.reverse();
+onMounted(() => {
+  taskStore.fetchTasks();
 });
 </script>
 
@@ -129,6 +107,7 @@ onMounted(async () => {
     width: 130px;
     margin-inline: auto;
     margin-bottom: 24px;
+    margin-top: 24px;
   }
 
   &-button {
